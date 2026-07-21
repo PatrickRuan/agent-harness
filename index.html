@@ -16,6 +16,7 @@
   <a href="m4-toolbox.html">M4 零件箱</a>
   <a href="m5-products.html">M5 產品</a>
   <a href="m6-safety.html">M6 安全</a>
+  <a href="how-made.html">製作說明</a>
 </div></nav>
 
 <header class="hero"><div class="wrap">
@@ -73,10 +74,12 @@
       <span class="mins">約 12 分鐘</span>
     </a>
     <a class="modcard" href="m3-agent-harness.html">
-      <div class="mnum">MODULE 3 · 核心</div>
+      <div class="mnum">MODULE 3 · 核心（最長）</div>
       <h3>Agent = Model + Harness</h3>
-      <p>工具怎麼運作、為什麼「迴圈」才是靈魂（電機系：這就是回授控制）。含逐步拆解互動。</p>
-      <span class="mins">約 15 分鐘</span>
+      <p>從「30 行 Python」的第一代 harness 開始，一路到工具、迴圈（電機系：這就是回授控制）、
+         為何 harness 變顯學。含 <b>messages 陣列互動</b>、逐步拆解、兩種 harness 對比，
+         以及<b>兩段真的能複製回家跑的 Python</b>。</p>
+      <span class="mins">約 30 分鐘</span>
     </a>
     <a class="modcard" href="m4-toolbox.html">
       <div class="mnum">MODULE 4 · 零件</div>
@@ -108,6 +111,7 @@
   <div class="card">
     <h3>頁面上的互動是真的在跑 AI 嗎？</h3>
     <p>不是。所有互動都是<b>前端模擬</b>，不會連網、不需要金鑰。原因有二：一是<b>不該把 API 金鑰放進公開網頁</b>（這本身就是 M6 會講的安全問題）；二是教學重點在「看懂流程」，模擬就夠清楚了。</p>
+    <p>但 <a href="m3-agent-harness.html">M3</a> 裡附了<b>兩段真實可執行的 Python</b>（<code class="inline">chat.py</code> 與 <code class="inline">agent.py</code>）——那是可以複製回自己電腦、填上金鑰就能跑的，不是示意用的假程式碼。</p>
   </div>
 
   <div class="card">
@@ -125,17 +129,13 @@
   <h2 class="title"><span class="chnum">↻</span>這門課是怎麼做出來的</h2>
 
   <div class="card">
-    <p>這份教材本身就是一個「人給目標、AI 跑迴圈」的例子——也就是 M3 講的那個迴圈。過程大致是：</p>
-    <ul>
-      <li><b>先規劃再動工</b>：不是開口就寫程式，而是先確認受眾（大一電機系、不預設程式背景）、決定要不要拆成多頁、要不要加安全章節，寫成計畫、確認之後才建置。</li>
-      <li><b>查證勝過印象</b>：AI 的知識有截止日。寫這頁時，「loop engineering」和 Hermes Agent 都在截止日之後才出現——<b>如果照記憶寫，就會寫錯，甚至會理直氣壯地「糾正」正確的說法</b>。所以產品與日期全部另外查過。</li>
-      <li><b>在瀏覽器裡真的驗證</b>：每個互動都實際點過、深色模式與手機寬度都看過、主控台確認無錯誤，而不是寫完就當它會動。</li>
-      <li><b>純靜態、零相依</b>：整站只有 HTML／CSS／JS，沒有任何外部套件或 CDN，所以可離線、可長期保存、不會因為某個服務關掉就壞掉。</li>
-    </ul>
+    <p>這份教材本身就是一個「人給目標、AI 跑迴圈」的例子——也就是 M3 講的那個迴圈。裡面有一段很值得講的插曲：</p>
+    <p>製作時 AI 的知識截止於 2026 年 1 月，但當時已是 7 月。<b>「loop engineering」這個詞是 6 月才被命名的，Hermes Agent 是 2 月才發布的</b>——AI 對兩者一無所知，而且第一反應是懷疑「這應該是使用者自己造的詞吧」，差點就理直氣壯地「糾正」一個完全正確的說法。是先查證才沒把錯誤寫進教材。</p>
     <div class="note" style="margin-bottom:0">
-      這中間最值得學的一課是第二點：<b>AI 最危險的時候，不是它說「我不知道」，而是它用同樣自信的語氣講一件過期或錯誤的事。</b>
-      會查證、會要求證據，比會下提示詞重要得多。
+      <b>AI 最危險的時候，不是它說「我不知道」，而是它用同樣自信的語氣講一件過期或錯誤的事。</b>
+      語氣完全聽不出差別。會查證、會要求證據，比會下提示詞重要得多。
     </div>
+    <p style="margin-top:14px"><a href="how-made.html"><b>→ 完整製作說明（規劃、取捨、踩到的坑、怎麼自己改）</b></a></p>
   </div>
 
 </div></main>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>製作說明 · 這門課是怎麼做出來的</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="sitebar"><div class="inner">
+  <a class="home" href="index.html">🏠 課程地圖</a>
+  <a href="m1-context-window.html">M1 箱子</a>
+  <a href="m2-four-eras.html">M2 四代工程學</a>
+  <a href="m3-agent-harness.html">M3 Agent</a>
+  <a href="m4-toolbox.html">M4 零件箱</a>
+  <a href="m5-products.html">M5 產品</a>
+  <a href="m6-safety.html">M6 安全</a>
+  <a href="how-made.html">製作說明</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">附錄 · 把過程也攤開</div>
+  <h1>這門課是怎麼做出來的</h1>
+  <p>這份教材本身，就是一個「人給目標、AI 跑迴圈」的例子——也就是 M3 講的那個迴圈。</p>
+</div></header>
+
+<main><div class="wrap">
+
+  <div class="card">
+    <h3>1 · 先規劃，再動工</h3>
+    <p>沒有一開始就寫程式。先讓 AI 讀參考頁
+       <a href="https://patrickruan.github.io/mnist-knob-lab/" target="_blank" rel="noopener">mnist-knob-lab</a>
+       抓風格，然後確認三個關鍵選擇：<b>受眾是誰</b>（大一電機系，不預設程式背景）、
+       <b>互動要做多深</b>、<b>要不要加安全章節</b>。寫成一份計畫、經人核准之後才開始建置。</p>
+    <p class="muted">這一步跟寫程式的道理一樣：需求沒談清楚就開工，做得越快錯得越遠。</p>
+  </div>
+
+  <div class="card">
+    <h3>2 · 純靜態、零外部相依的取捨</h3>
+    <p>整個網站只有 HTML、CSS、JavaScript，<b>沒有任何外部套件或 CDN</b>。</p>
+    <p><b>好處：</b>可以離線打開、可以直接放上 GitHub Pages、不會因為某個服務關掉就壞掉，十年後打開應該還是能動。<br>
+       <b>代價：</b>不能用現成的圖表函式庫，所有圖示都得自己用 SVG 畫。對教學頁來說，這筆交易很划算。</p>
+    <p class="muted">一開始是單一個大 <code class="inline">index.html</code>；後來內容擴充到六個模組，就拆成多頁並抽出共用的
+       <code class="inline">assets/style.css</code> 與 <code class="inline">assets/app.js</code>，否則單檔會膨脹到難以維護。</p>
+  </div>
+
+  <div class="card">
+    <h3>3 · 為什麼互動是「前端模擬」，而不是真的連 AI</h3>
+    <p>頁面上所有互動（<code class="inline">messages</code> 陣列堆疊、脈絡視窗填充器、Agent 步進器、
+       子代理雙箱子對比、注入攻擊演示）都是純前端演的，不會連網。原因有兩個：</p>
+    <ul>
+      <li><b>不該把 API 金鑰放進公開網頁</b>——任何人按 F12 就能看到。這件事本身就是
+          <a href="m6-safety.html">M6</a> 在講的安全問題，教材自己更不該示範壞習慣。</li>
+      <li><b>教學重點是「看懂流程」</b>，模擬就足夠清楚，而且不會因為 API 掛掉或額度用完就變成一頁死掉的教材。</li>
+    </ul>
+    <p>真正<b>可以複製回家跑</b>的程式碼，附在 <a href="m3-agent-harness.html">M3</a> 裡——
+       那兩段（<code class="inline">chat.py</code> 與 <code class="inline">agent.py</code>）是真的能執行的，
+       填上你自己的金鑰即可。</p>
+  </div>
+
+  <div class="card">
+    <h3>4 · 事實查證：這門課最重要的一個教訓</h3>
+    <p>製作過程中發生了一件很值得寫進教材的事。</p>
+    <p>AI 的知識有<b>截止日期</b>。寫這份教材時，負責產出的 AI 知識截止於 2026 年 1 月，
+       但當時已經是 7 月——中間有半年空窗。而在那半年裡：</p>
+    <ul>
+      <li><b>「loop engineering」</b>這個詞在 6 月才被命名（Addy Osmani 的文章 + Peter Steinberger 的總結）</li>
+      <li><b>Hermes Agent</b> 在 2 月才發布</li>
+    </ul>
+    <p>AI 對這兩件事<b>一無所知</b>，而且第一反應是懷疑「loop engineering 應該是使用者自己造的詞吧」——
+       差一點就理直氣壯地「糾正」了一個完全正確的說法。是先上網查證，才沒有把錯誤寫進教材。</p>
+    <div class="danger">
+      <b>請把這件事記起來：</b>AI 最危險的時候，不是它說「我不知道」，
+      而是它<b>用同樣自信的語氣，講一件已經過期或根本錯誤的事</b>。
+      語氣完全聽不出差別。<br><br>
+      所以這門課的內容——人名、日期、產品、術語起源——都經過實際查證，不是憑印象寫的。
+      <b>會要求證據，比會下提示詞重要得多。</b>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>5 · 在瀏覽器裡真的驗證過</h3>
+    <p>每個互動都實際點過、每頁都看過深色模式與手機寬度、主控台確認沒有錯誤，
+       而不是寫完就假設它會動。過程中真的抓到並修掉幾個問題：</p>
+    <ul>
+      <li>導覽列原本用了毛玻璃效果（<code class="inline">backdrop-filter</code>），
+          捲動時要不斷重繪，在效能較弱的裝置上會嚴重卡頓——移除。</li>
+      <li>全域的平滑捲動（<code class="inline">scroll-behavior:smooth</code>）會讓<b>滑鼠滾輪</b>也被強制加上動畫，
+          操作起來又慢又怪——只保留點擊導覽時的平滑效果。</li>
+      <li>子代理示範的文案寫「18,000 tokens」，但三輪加總實際是 18,100。
+          <b>教材的數字必須精確</b>，改成由程式即時計算，不會再對不上。</li>
+    </ul>
+    <p class="muted">這正是 M3 那個迴圈：<b>做 → 驗證 → 發現不對 → 修 → 再驗證</b>。
+       沒有驗證那一步，前面做得再漂亮都只是「看起來能動」。</p>
+  </div>
+
+  <div class="card">
+    <h3>6 · 想自己改、自己發佈？</h3>
+    <p>這份教材是純靜態網頁，歡迎取用修改。做法：把整個資料夾放進一個 GitHub repo、
+       在設定裡開啟 Pages，就會有一個公開網址。之後改內容，編輯對應的
+       <code class="inline">.html</code> 檔再推上去，網址不變、自動更新。</p>
+    <p class="muted">要調整全站配色或字體，改 <code class="inline">assets/style.css</code> 一個檔就會套用到所有頁面。</p>
+  </div>
+
+  <div class="note">
+    整個製作過程本身，就是 <a href="m3-agent-harness.html">M3</a> 那個迴圈的縮影：
+    <b>人定目標 → AI 提方案 → 在瀏覽器裡驗證 → 發現問題 → 修正 → 再一圈</b>。
+    差別只在於，這次迴圈裡負責「動手」的，是寫這份教材的那個 harness。
+  </div>
+
+  <div class="pagenav">
+    <a href="m6-safety.html">← M6 安全</a>
+    <a class="next" href="index.html">回課程地圖 ↑</a>
+  </div>
+
+</div></main>
+
+<footer>
+  AI Agent 白話課 · 製作說明 · <a href="index.html">回課程地圖</a>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -16,12 +16,13 @@
   <a href="m4-toolbox.html">M4 零件箱</a>
   <a href="m5-products.html">M5 產品</a>
   <a href="m6-safety.html">M6 安全</a>
+  <a href="how-made.html">製作說明</a>
 </div></nav>
 
 <header class="hero"><div class="wrap">
-  <div class="kicker">Module 3 · 核心概念</div>
+  <div class="kicker">Module 3 · 核心（本課最長，慢慢看）</div>
   <h1>Agent = Model + Harness</h1>
-  <p>模型是被關在密室裡的大腦。這一課講：怎麼幫它裝上身體，以及為什麼「會繞圈」才是關鍵。</p>
+  <p>模型是被關在密室裡的大腦。這一課從「30 行 Python」開始，一路講到它怎麼長出手腳、學會繞圈。</p>
   <div class="formula">
     <span class="pill model">Model</span><span class="op">＋</span>
     <span class="pill harness">Harness</span><span class="op">＝</span>
@@ -57,12 +58,77 @@
 
   <div class="card">
     <p>模型像一顆很聰明、但被關在密室裡的大腦——能思考，但沒有手、沒有眼睛、也記不住昨天。<b>Harness 就是接上去的那副身體</b>：眼睛（讀資料）、手腳（呼叫工具）、神經（把訊息傳來傳去），還有那條「不准做危險事」的紅線。</p>
+    <p class="muted">接下來我們照著歷史順序，看這副「身體」怎麼從 30 行程式，長成今天能自己工作好幾小時的樣子。</p>
   </div>
 
-  <h2 class="title"><span class="chnum">2</span>裝上手腳：工具怎麼運作</h2>
-  <p class="lede">模型自己不會上網查天氣。它能查，是因為 harness 做了一套「傳話」。</p>
+  <h2 class="title"><span class="chnum">2</span>最原始的樣子：20–30 行 Python 聊天</h2>
+  <p class="lede">早期我們剛拿到 LLM API，寫的程式其實就是「第一代 harness」——最輕薄的一層。</p>
 
   <div class="card">
+    <p>那時候模型只是個<b>「文字接龍機」</b>：你給它一串對話，它接下一句。那 30 行程式碼只負責三件小事：</p>
+    <div class="tagrow">
+      <span class="tag h">1. 設定 system prompt（角色）</span>
+      <span class="tag h">2. 把對話堆進 messages 陣列</span>
+      <span class="tag h">3. 呼叫 API、印出回覆</span>
+    </div>
+    <p class="muted">關鍵觀念（就是 M1 講的那件事）：模型<b>沒有記憶</b>。它會「記得」前面聊過什麼，唯一的原因是——<b>你每一輪都把整串 <code class="inline">messages</code> 再寄一次給它</b>。維護這串陣列，就是 harness 最原始的工作。</p>
+  </div>
+
+  <div class="demo">
+    <div class="lbl">互動 · 看 messages 陣列怎麼長大</div>
+    <p class="hint">打一句話送出，看看 harness 幫你維護的對話陣列多了哪兩則。（純前端模擬，不會真的連網）</p>
+    <div class="row">
+      <input id="chatInput" type="text" placeholder="例如：幫我想三個週末的活動">
+      <button class="btn" id="chatSend">送出</button>
+      <button class="btn ghost" id="chatReset">重來</button>
+    </div>
+    <div class="msgs" id="chatMsgs"></div>
+    <p class="muted" id="chatCount" style="font-size:12.5px;margin-top:10px"></p>
+  </div>
+
+  <div class="code">
+    <div class="bar"><span class="fn">chat.py — 最原始的 harness（真實可跑）</span><button class="copy">複製</button></div>
+    <pre><code><span class="cm"># pip install openai</span>
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+client = OpenAI(api_key=<span class="st">"sk-..."</span>)  <span class="cm"># ← 換成你自己的金鑰</span>
+
+<span class="cm"># harness 工作 1：設定角色，並開一個對話陣列</span>
+messages = [
+    {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: <span class="st">"你是一個友善、簡潔的中文助理。"</span>},
+]
+
+<span class="kw">while</span> <span class="kw">True</span>:
+    user = input(<span class="st">"你："</span>)
+    <span class="kw">if</span> user.strip() <span class="kw">in</span> {<span class="st">"exit"</span>, <span class="st">"quit"</span>}:
+        <span class="kw">break</span>
+
+    <span class="cm"># harness 工作 2：把使用者這句話堆進陣列</span>
+    messages.append({<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: user})
+
+    <span class="cm"># harness 工作 3：把「整串」對話寄給模型（模型沒有記憶！）</span>
+    resp = client.chat.completions.create(
+        model=<span class="st">"gpt-4o-mini"</span>,
+        messages=messages,
+    )
+    reply = resp.choices[<span class="nm">0</span>].message.content
+    print(<span class="st">"AI："</span>, reply)
+
+    <span class="cm"># 把 AI 的回覆也存回陣列，下一輪才接得上</span>
+    messages.append({<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: reply})</code></pre>
+  </div>
+
+  <p class="muted" style="font-size:13.5px">
+    沒學過 Python 完全不用擔心——你只要看懂那三行註解在講什麼就夠了。
+    補充：更早期（2023 年 GPT-3.5 剛開放）的寫法是 <code class="inline">openai.ChatCompletion.create(...)</code>，
+    概念一模一樣，只是新版 SDK 改成先建一個 <code class="inline">client</code>。無論哪種，<b>這整段就是最小的 harness</b>。
+  </p>
+
+  <h2 class="title"><span class="chnum">3</span>裝上手腳：Tool use ＝ 這才叫 Agent</h2>
+  <p class="lede">當我們不滿足於純聊天，想讓它查資料、算數、發信——就得幫模型裝上「手腳」。</p>
+
+  <div class="card">
+    <p>模型自己<b>不會</b>上網查天氣。它能查，是因為 harness 做了一套「傳話」：</p>
     <ol style="margin:.4em 0;padding-left:20px">
       <li>Harness 用 JSON 把「有哪些工具、怎麼用」<b>描述</b>給模型看。</li>
       <li>模型看懂後說：「我要呼叫 <code class="inline">get_weather</code>，參數是台北」——它只是<b>輸出一段文字</b>，並沒有真的執行。</li>
@@ -88,38 +154,34 @@
     </div>
   </div>
 
-  <details class="adv">
-    <summary>給有程式基礎的同學：這段真的長什麼樣（可跳過）</summary>
-    <div class="body">
-      <p class="muted" style="font-size:14px">沒學過 Python 完全不用看懂，掃一眼知道「工具是寫在外面的程式」就夠了。</p>
-      <div class="code">
-        <div class="bar"><span class="fn">agent.py — 幫模型裝上一個工具</span><button class="copy">複製</button></div>
-        <pre><code><span class="cm"># harness 工作：用 JSON 描述「有哪些工具」給模型看</span>
+  <div class="code">
+    <div class="bar"><span class="fn">agent.py — 幫模型裝上一個工具（真實可跑，節錄）</span><button class="copy">複製</button></div>
+    <pre><code><span class="cm"># harness 工作：用 JSON 描述「有哪些工具」給模型看</span>
 tools = [{
-  <span class="st">"type"</span>: <span class="st">"function"</span>,
-  <span class="st">"function"</span>: {
-    <span class="st">"name"</span>: <span class="st">"get_weather"</span>,
-    <span class="st">"description"</span>: <span class="st">"查詢某城市目前氣溫"</span>,
-    <span class="st">"parameters"</span>: {<span class="st">"type"</span>:<span class="st">"object"</span>,
-      <span class="st">"properties"</span>:{<span class="st">"city"</span>:{<span class="st">"type"</span>:<span class="st">"string"</span>}},
-      <span class="st">"required"</span>:[<span class="st">"city"</span>]}
-  }
+    <span class="st">"type"</span>: <span class="st">"function"</span>,
+    <span class="st">"function"</span>: {
+        <span class="st">"name"</span>: <span class="st">"get_weather"</span>,
+        <span class="st">"description"</span>: <span class="st">"查詢某城市目前氣溫"</span>,
+        <span class="st">"parameters"</span>: {<span class="st">"type"</span>:<span class="st">"object"</span>,
+            <span class="st">"properties"</span>:{<span class="st">"city"</span>:{<span class="st">"type"</span>:<span class="st">"string"</span>}},
+            <span class="st">"required"</span>:[<span class="st">"city"</span>]},
+    },
 }]
 
-<span class="kw">def</span> get_weather(city):          <span class="cm"># ← 工具的「真身」寫在 harness 裡</span>
-    <span class="kw">return</span> {<span class="st">"temp"</span>: <span class="nm">32</span>, <span class="st">"desc"</span>: <span class="st">"晴"</span>}
+<span class="kw">def</span> get_weather(city):        <span class="cm"># ← 工具的「真身」寫在 harness 裡</span>
+    <span class="kw">return</span> {<span class="st">"temp"</span>: <span class="nm">32</span>, <span class="st">"desc"</span>: <span class="st">"晴"</span>}   <span class="cm"># 真實情況會去打氣象 API</span>
 
 messages = [{<span class="st">"role"</span>:<span class="st">"user"</span>,<span class="st">"content"</span>:<span class="st">"台北現在幾度？"</span>}]
 resp = client.chat.completions.create(
     model=<span class="st">"gpt-4o-mini"</span>, messages=messages, tools=tools)
 
 msg = resp.choices[<span class="nm">0</span>].message
-<span class="kw">if</span> msg.tool_calls:                    <span class="cm"># 模型「決定」要用工具</span>
+<span class="kw">if</span> msg.tool_calls:                     <span class="cm"># 模型「決定」要用工具</span>
     call = msg.tool_calls[<span class="nm">0</span>]
     args = json.loads(call.function.arguments)
-    result = get_weather(**args)       <span class="cm"># harness「真的」執行</span>
+    result = get_weather(**args)        <span class="cm"># harness「真的」執行</span>
 
-    <span class="cm"># 把結果放回箱子，再問一次 → 這就是迴圈的一圈</span>
+    <span class="cm"># 把結果餵回去，再問一次模型 → 這就是「迴圈」的一圈</span>
     messages.append(msg)
     messages.append({<span class="st">"role"</span>:<span class="st">"tool"</span>,
         <span class="st">"tool_call_id"</span>:call.id,
@@ -127,11 +189,9 @@ msg = resp.choices[<span class="nm">0</span>].message
     final = client.chat.completions.create(
         model=<span class="st">"gpt-4o-mini"</span>, messages=messages)
     print(final.choices[<span class="nm">0</span>].message.content)</code></pre>
-      </div>
-    </div>
-  </details>
+  </div>
 
-  <h2 class="title"><span class="chnum">3</span>靈魂不是工具，是迴圈</h2>
+  <h2 class="title"><span class="chnum">4</span>靈魂不是工具，是迴圈</h2>
   <p class="lede">很多人以為「有工具就是 Agent」。更準確地說：Agent 是<b>會自己一圈一圈跑到完成</b>的東西。</p>
 
   <div class="note">
@@ -174,22 +234,70 @@ msg = resp.choices[<span class="nm">0</span>].message
     <p class="muted">這種「自己撞牆、自己爬起來」的能力，正是 agent 和聊天機器人最大的差別。而<b>什麼時候該放棄別再撞了</b>，就是 M2 講的 loop engineering 在管的事。</p>
   </div>
 
-  <h2 class="title"><span class="chnum">4</span>幾個常見的誤會</h2>
+  <h2 class="title"><span class="chnum">5</span>為什麼 Harness 最近變「顯學」？</h2>
+  <p class="lede">模型單靠自己撞牆後，大家把心力放到「外面那層程式」，harness 才被推上檯面。</p>
+
+  <div class="card">
+    <p>過去 harness 只是個「跑腿的」——傳傳資料而已。現在大家發現：<b>直接叫模型硬答，效果常常不夠好</b>；但在外面那層加上一些技巧，同一個模型就能穩很多：</p>
+    <div class="tagrow">
+      <span class="tag h">脈絡管理（塞對的東西進箱子）</span>
+      <span class="tag h">失敗重試 / 自我修正</span>
+      <span class="tag h">反思 reflection</span>
+      <span class="tag h">RAG 檢索增強</span>
+      <span class="tag h">子 agent 分工</span>
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="lbl">互動 · 同一個模型，兩種 harness</div>
+    <p class="hint">任務：「幫我查我們 Q2 的退貨率，並說明為什麼變高」。切換看看兩種 harness 餵給<b>同一個模型</b>時，出來的東西差多少。</p>
+    <div class="toggle" id="cmpToggle">
+      <button data-c="bare" class="active">陽春 harness</button>
+      <button data-c="rich">精緻 harness</button>
+    </div>
+    <div class="flow" id="cmpFlow"></div>
+    <div class="outbox" id="cmpOut"></div>
+  </div>
+
+  <div class="callout">
+    <b>別誤會：</b>「好 harness 能讓中階模型贏過高階模型」這句話講得太滿。
+    更準的說法是——<b>同一個模型在不同 harness 下，表現天差地遠</b>；harness 的品質，有時和模型本身一樣重要。
+    但硬要用陽春 harness 配弱模型去贏強模型，通常不成立。
+  </div>
+
+  <div class="card">
+    <h3>那 LangChain、AutoGen、CrewAI 是什麼？</h3>
+    <p>它們是 <b>framework（框架）</b>——幫你「蓋 harness」的工具箱，不等於 harness 本身。你也可以完全不用框架，自己用 30 行寫一個 harness（很多正式產品就是這樣，為了可控）。</p>
+  </div>
+
+  <h2 class="title"><span class="chnum">6</span>把話講精準（幾個常見的小誤會）</h2>
+  <p class="lede">這些說法「聽起來對、但不夠精準」，這裡校準一下。</p>
 
   <div class="tablewrap">
     <table class="cmp">
-      <thead><tr><th style="min-width:110px">主題</th><th>常聽到的說法</th><th>更精準的說法</th></tr></thead>
+      <thead><tr><th style="min-width:110px">主題</th><th>常見／含糊的說法</th><th>更精準的說法</th></tr></thead>
       <tbody>
+        <tr><td class="lab">名詞的年紀</td><td class="no">「早期那 30 行就叫 harness」</td>
+            <td class="yes">那層薄 wrapper 的<b>概念</b>早就有；但 harness 這個<b>詞</b>被廣泛使用，是 2024–2026 才發生的事。</td></tr>
         <tr><td class="lab">Agent 的定義</td><td class="no">「有工具＝Agent」</td>
             <td class="yes">靈魂是<b>迴圈</b>：想→做→看→再想，反覆到完成。工具只是迴圈裡的一步。</td></tr>
-        <tr><td class="lab">Harness 的威力</td><td class="no">「好 harness 能讓弱模型贏過強模型」</td>
-            <td class="yes">講太滿。準確版：<b>同一個模型在不同 harness 下差很多</b>；harness 品質有時和模型一樣重要。但拿弱模型硬碰強模型，通常還是輸。</td></tr>
-        <tr><td class="lab">框架 vs harness</td><td class="no">「LangChain 就是 harness」</td>
-            <td class="yes">那些是 <b>framework</b>（幫你蓋 harness 的工具箱），不等於 harness 本身。很多正式產品為了可控，反而自己手寫。</td></tr>
-        <tr><td class="lab">名詞的年紀</td><td class="no">「harness 是個老詞」</td>
-            <td class="yes">薄薄一層 wrapper 的<b>概念</b>很早就有；但這個<b>詞</b>被廣泛使用是 2024–2026 才發生的事。</td></tr>
+        <tr><td class="lab">Harness 的威力</td><td class="no">「中階模型靠 harness 就能贏高階模型」</td>
+            <td class="yes">太滿。準確版：同一模型在不同 harness 下差很多；harness 品質有時和模型一樣重要。</td></tr>
+        <tr><td class="lab">框架 vs harness</td><td class="no">「LangChain＝harness」</td>
+            <td class="yes">它們是 <b>framework</b>（幫你蓋 harness 的工具），不等於 harness 本身。</td></tr>
+        <tr><td class="lab">MCP 是什麼</td><td class="no">「MCP 是多 agent 協作架構」</td>
+            <td class="yes">MCP 是一個<b>連接工具／資料給模型的協定</b>，像 USB 標準口，不是協作架構。（詳見 <a href="m4-toolbox.html">M4</a>）</td></tr>
+        <tr><td class="lab">Multi-agent</td><td class="no">「多 agent 是 harness 的完全體」</td>
+            <td class="yes">它是一種<b>架構取捨</b>，常更脆弱、更難除錯，不代表更高級。單 agent 把迴圈做穩，往往更實用。</td></tr>
+        <tr><td class="lab">最吃重的活</td><td class="no">（常被忽略）</td>
+            <td class="yes">現代 harness 最花心思的其實是<b>脈絡管理</b>：箱子有限，每輪要決定塞什麼、丟什麼、壓縮什麼。</td></tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="note">
+    <b>本課總結：</b><code class="inline">Agent = Model + Harness</code> 這個公式在今天的語境下站得住腳，也很有代表性。
+    但真正的靈魂是那個<b>迴圈</b>——沒有迴圈的工具呼叫，只是比較花俏的問答。
   </div>
 
   <div class="pagenav">
@@ -200,7 +308,8 @@ msg = resp.choices[<span class="nm">0</span>].message
 </div></main>
 
 <footer>
-  AI Agent 白話課 · M3 Agent = Model + Harness · <a href="index.html">回課程地圖</a>
+  AI Agent 白話課 · M3 Agent = Model + Harness · <a href="index.html">回課程地圖</a><br>
+  <span style="opacity:.75">互動皆為前端模擬；真實可跑的 API 程式碼就是頁面上那兩段。</span>
 </footer>
 
 <script src="assets/app.js"></script>
@@ -208,8 +317,63 @@ msg = resp.choices[<span class="nm">0</span>].message
 (function(){
   "use strict";
 
+  /* ---------- ② messages 陣列 demo ---------- */
+  var chatMsgs  = document.getElementById('chatMsgs');
+  var chatInput = document.getElementById('chatInput');
+  var chatCount = document.getElementById('chatCount');
+  var REPLIES = [
+    "好的！這是三個點子：① 河濱騎腳踏車 ② 逛獨立書店 ③ 在家做手沖咖啡。",
+    "沒問題，我幫你整理成一份清單，並排出優先順序。",
+    "了解，我把重點抓出來給你：這是最關鍵的三件事。",
+    "收到～我先分成「必做」和「加分」兩類來規劃。"
+  ];
+  var replyIdx = 0;
+  var ROLE_LABEL = {
+    system:'system（角色設定）', user:'user（你）',
+    assistant:'assistant（AI）', tool:'tool（工具結果）'
+  };
+
+  function addMsg(role, content){
+    var wrap = Lab.el('div', 'msg ' + role);
+    wrap.appendChild(Lab.el('div', 'role', ROLE_LABEL[role] || role));
+    wrap.appendChild(Lab.el('div', 'body', content));
+    chatMsgs.appendChild(wrap);
+  }
+
+  function updateCount(){
+    var n = chatMsgs.children.length;
+    chatCount.textContent = 'messages 陣列目前有 ' + n +
+      ' 則。每次送出，harness 會把「整串」再寄給模型一次——這就是它「記得」對話的唯一原因。';
+  }
+
+  function seedChat(){
+    Lab.clear(chatMsgs);
+    addMsg('system', '你是一個友善、簡潔的中文助理。');
+    updateCount();
+  }
+
+  function sendChat(){
+    var v = (chatInput.value || '').trim();
+    if (!v) return;
+    addMsg('user', v);
+    addMsg('assistant', REPLIES[replyIdx % REPLIES.length]);
+    replyIdx++;
+    chatInput.value = '';
+    updateCount();
+    chatMsgs.lastChild.scrollIntoView({block:'nearest', behavior:'smooth'});
+  }
+
+  document.getElementById('chatSend').addEventListener('click', sendChat);
+  document.getElementById('chatReset').addEventListener('click', function(){
+    replyIdx = 0; seedChat();
+  });
+  chatInput.addEventListener('keydown', function(e){ if (e.key === 'Enter') sendChat(); });
+  seedChat();
+
+  /* ---------- ③ 工具呼叫步進器 ---------- */
   Lab.stepper({ steps:'#stepBox .step', next:'#stepNext', reset:'#stepReset' });
 
+  /* ---------- ④ 迴圈動畫 ---------- */
   var loopNodes = Array.prototype.slice.call(document.querySelectorAll('#loopViz .node'));
   var loopBtn = document.getElementById('loopRun');
   var timer = null;
@@ -231,6 +395,49 @@ msg = resp.choices[<span class="nm">0</span>].message
       }
     })();
   });
+
+  /* ---------- ⑤ 陽春 vs 精緻 harness ---------- */
+  var CMP = {
+    bare: {
+      flow: '流程：messages = [問題] → 模型',
+      lead: '模型只能用它訓練時的舊知識硬猜：',
+      quote: '「退貨率上升通常和產品品質、物流、或季節性因素有關，建議你檢視相關數據……」',
+      color: 'var(--warn)',
+      tail: '👉 空泛、沒碰到你真正的數字，因為 harness 沒餵給它任何內部資料，也沒讓它動手查。'
+    },
+    rich: {
+      flow: '流程：問題 → 檢索(RAG)內部報表 → 呼叫 query_db 工具 → 反思檢查 → 模型彙整',
+      lead: 'Harness 先幫模型把資料備齊、給了工具、跑了幾圈：',
+      quote: '「Q2 退貨率 8.3%（Q1 為 5.1%）。拆解後主因：型號 A-200 佔退貨 61%，集中在 5/12 之後出貨批次，退貨理由多為『螢幕亮點』。建議優先檢查該批供應商品質。」',
+      color: 'var(--harness)',
+      tail: '👉 具體、可行動。同一個模型，差別全在外面那層 harness。'
+    }
+  };
+
+  var cmpFlow = document.getElementById('cmpFlow');
+  var cmpOut  = document.getElementById('cmpOut');
+
+  function renderCmp(key){
+    var d = CMP[key];
+    cmpFlow.textContent = d.flow;
+    Lab.clear(cmpOut);
+
+    var p1 = document.createElement('p');
+    p1.style.margin = '.2em 0';
+    p1.appendChild(Lab.el('b', null, d.lead));
+    cmpOut.appendChild(p1);
+
+    var q = Lab.el('p', null, d.quote);
+    q.style.color = d.color;
+    q.style.margin = '.4em 0';
+    cmpOut.appendChild(q);
+
+    var t = Lab.el('p', 'muted', d.tail);
+    t.style.margin = '.4em 0 0';
+    cmpOut.appendChild(t);
+  }
+
+  Lab.toggler('#cmpToggle', renderCmp);
 })();
 </script>
 </body>
