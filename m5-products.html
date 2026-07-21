@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M5 · 從 Chatbot 到 Agentic AI</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="sitebar"><div class="inner">
+  <a class="home" href="index.html">🏠 課程地圖</a>
+  <a href="m1-context-window.html">M1 箱子</a>
+  <a href="m2-four-eras.html">M2 四代工程學</a>
+  <a href="m3-agent-harness.html">M3 Agent</a>
+  <a href="m4-toolbox.html">M4 零件箱</a>
+  <a href="m5-products.html">M5 產品</a>
+  <a href="m6-safety.html">M6 安全</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">Module 5 · 世界怎麼變的</div>
+  <h1>從 Chatbot<br>到 Agentic AI</h1>
+  <p>前面講的都是原理。這一課看它們如何變成真實產品，以及一種叫「vibe coding」的新工作方式。</p>
+</div></header>
+
+<main><div class="wrap">
+
+  <h2 class="title"><span class="chnum">1</span>產品形態的轉變</h2>
+  <p class="lede">同一個模型，包上不同的 harness，就變成完全不同的產品。</p>
+
+  <div class="tablewrap">
+    <table class="cmp">
+      <thead><tr><th style="min-width:100px"></th><th>Chatbot 時代</th><th>Agentic 時代</th></tr></thead>
+      <tbody>
+        <tr><td class="lab">互動方式</td><td>你問一句，它答一句</td><td class="yes">你給一個目標，它自己跑很多圈</td></tr>
+        <tr><td class="lab">能做的事</td><td>產生文字</td><td class="yes">實際改檔案、跑指令、寄訊息</td></tr>
+        <tr><td class="lab">時間尺度</td><td>幾秒</td><td class="yes">幾分鐘到幾小時，甚至跨天</td></tr>
+        <tr><td class="lab">記憶</td><td>關掉視窗就沒了</td><td class="yes">跨工作階段保留（harness 幫它存）</td></tr>
+        <tr><td class="lab">你的角色</td><td>提問者</td><td class="yes">下目標的人 ＋ 監督者</td></tr>
+        <tr><td class="lab">失敗的代價</td><td>回答得爛，你重問</td><td class="no">它可能真的改壞東西、真的寄出信 ⚠️</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    最後一列是這門課後半的重點。當 AI 從「講話」升級成「做事」，<b>做錯的後果就從尷尬變成損失</b>。
+    這就是為什麼下一課要專門講安全。
+  </div>
+
+  <h2 class="title"><span class="chnum">2</span>2026 年的兩個指標性產品</h2>
+  <p class="lede">個人 AI agent 在 2026 年初突然變成主流。兩個代表案例。</p>
+
+  <div class="card">
+    <h3>OpenClaw · 2026 年 1 月</h3>
+    <p>由 PSPDFKit 創辦人 Peter Steinberger 開發的開源個人 AI 助理，<b>上線第一週就衝破十萬顆 GitHub 星</b>，是當時成長最快的開源專案之一。</p>
+    <p><b>它代表的趨勢：</b>不是雲端服務，而是<b>跑在你自己機器上</b>的 agent——自己保管資料、自己帶 API 金鑰、能接上通訊軟體、能實際操作你的電腦。</p>
+    <p class="muted">後續發展也很說明問題：作者在爆紅後幾週（2 月）加入 OpenAI，專案轉由獨立的開源基金會維護。</p>
+  </div>
+
+  <div class="card">
+    <h3>Hermes Agent · 2026 年 2 月</h3>
+    <p>由 Nous Research 推出的開源自主 agent，同樣走自架路線，四個月內累積約十七萬顆星。</p>
+    <p><b>它代表的趨勢：</b>強調<b>長期記憶</b>與<b>自我演進</b>——以常駐程式的形式跑著，跨工作階段累積記憶、可排程執行任務，甚至能把做過的事寫成自己以後可重複使用的 skill。而且不綁定特定模型供應商，可以換不同模型、也能跑本地模型。</p>
+  </div>
+
+  <div class="note">
+    <b>為什麼這頁不寫功能清單？</b>因為這類產品變化極快——版本號每個月在跳，作者可能換東家，專案可能轉手。
+    如果課本寫「某某產品有 A、B、C 功能」，三個月後就是錯的。
+    <b>該記住的是它們共同指向的方向</b>：自架、私有、有長期記憶、能接進你的日常工具、能真的動手做事。
+    產品會換，這個方向不會。
+  </div>
+
+  <div class="card">
+    <h3>把它們放回課程脈絡</h3>
+    <p>用前面學的拆解，這兩個產品就一點也不神祕了：</p>
+    <ul>
+      <li><b>模型</b>：它們自己不做模型，你接哪家都行。</li>
+      <li><b>Harness</b>：它們的價值<b>幾乎全部在這裡</b>——迴圈、權限、記憶、排程、通訊軟體串接。</li>
+      <li><b>箱子管理</b>：跨天工作就必然要處理記憶與壓縮，否則早就爆了。</li>
+    </ul>
+    <p class="muted">換句話說，2026 年最紅的兩個 AI 專案，賣的都不是模型，<b>賣的是 harness</b>。這就是為什麼這個詞突然變成顯學。</p>
+  </div>
+
+  <h2 class="title"><span class="chnum">3</span>Vibe coding 是什麼？</h2>
+  <p class="lede">2025 年 2 月由 Andrej Karpathy 提出的說法，後來紅到變成年度詞彙。</p>
+
+  <div class="card">
+    <p>原意大致是：<b>你不再逐行寫程式，而是用自然語言描述你要什麼，讓 AI 去寫，你主要負責看結果對不對。</b>Karpathy 半開玩笑地形容那種狀態是「忘記程式碼的存在」。</p>
+    <p>會出現這種工作方式，正是因為前面幾課的東西成熟了——AI 有了工具、有了迴圈、能自己跑測試再修，你才可能只講需求不看實作。</p>
+  </div>
+
+  <div class="demo">
+    <div class="lbl">互動 · 同一個需求，兩種講法</div>
+    <p class="hint">Vibe coding 不等於「隨便講講」。切換看看差在哪。</p>
+    <div class="toggle" id="vibeToggle">
+      <button data-c="lazy" class="active">含糊的 vibe</button>
+      <button data-c="good">好的 vibe</button>
+    </div>
+    <div class="outbox" id="vibeOut"></div>
+  </div>
+
+  <div class="card">
+    <h3>這門課想給你的態度</h3>
+    <p>Vibe coding 很好用，但有個真實的陷阱：<b>你會得到一個能跑、但你不理解的系統</b>。能跑不代表對——它可能在你沒測到的狀況下壞掉，可能有安全漏洞，可能效能爛。</p>
+    <div class="note">
+      對大一的你們，我的建議是：<b>把 vibe coding 當成放大器，不是替代品。</b>
+      你懂的東西，它幫你做快十倍；你不懂的東西，它幫你把錯誤製造得更快十倍。
+      這也是為什麼這門課花這麼多篇幅講「箱子」「迴圈」這些原理——<b>你得看得懂它在幹嘛，才有資格放手讓它做。</b>
+    </div>
+  </div>
+
+  <div class="pagenav">
+    <a href="m4-toolbox.html">← M4 零件箱</a>
+    <a class="next" href="m6-safety.html">M6 · 安全與現實 →</a>
+  </div>
+
+</div></main>
+
+<footer>
+  AI Agent 白話課 · M5 產品線 · <a href="index.html">回課程地圖</a>
+</footer>
+
+<script src="assets/app.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var DATA = {
+    lazy: {
+      say: '「幫我做一個登入系統」',
+      got: [
+        '能跑，但密碼是明文存的',
+        '沒有防止暴力破解',
+        '沒有測試，你不知道哪裡會壞',
+        '三週後要改的時候，你完全看不懂它寫了什麼'
+      ],
+      verdict: '你得到一個看起來會動的東西，和一堆你不知道存在的問題。',
+      color: 'var(--warn)'
+    },
+    good: {
+      say: '「做一個登入系統。密碼要雜湊後儲存，登入失敗五次要鎖十分鐘，寫測試涵蓋成功、密碼錯誤、鎖定三種情況。做完把測試跑給我看。」',
+      got: [
+        '它知道你在乎什麼，不用猜',
+        '有測試 → 它自己能驗證，失敗會自己修（M3 的迴圈）',
+        '「跑給我看」給了它一個明確的完成條件',
+        '你看得懂驗收標準，才有辦法判斷它有沒有唬你'
+      ],
+      verdict: '一樣沒有逐行寫程式，但你控制了目標、限制與驗收方式。',
+      color: 'var(--harness)'
+    }
+  };
+
+  var out = document.getElementById('vibeOut');
+
+  function render(key){
+    var d = DATA[key];
+    Lab.clear(out);
+
+    var p1 = document.createElement('p');
+    p1.style.margin = '.1em 0 .6em';
+    p1.appendChild(Lab.el('b', null, '你說：'));
+    var q = Lab.el('span', null, d.say);
+    q.style.color = d.color;
+    p1.appendChild(q);
+    out.appendChild(p1);
+
+    out.appendChild(Lab.el('b', null, '你得到：'));
+    var ul = document.createElement('ul');
+    ul.style.margin = '.4em 0 .6em';
+    ul.style.paddingLeft = '20px';
+    d.got.forEach(function(t){
+      var li = Lab.el('li', null, t);
+      li.style.fontSize = '14px';
+      li.style.margin = '.25em 0';
+      ul.appendChild(li);
+    });
+    out.appendChild(ul);
+
+    var v = Lab.el('p', 'muted', d.verdict);
+    v.style.margin = '0';
+    out.appendChild(v);
+  }
+
+  Lab.toggler('#vibeToggle', render);
+})();
+</script>
+</body>
+</html>

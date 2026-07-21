@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M4 · 零件箱：MCP、Skills、子代理</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="sitebar"><div class="inner">
+  <a class="home" href="index.html">🏠 課程地圖</a>
+  <a href="m1-context-window.html">M1 箱子</a>
+  <a href="m2-four-eras.html">M2 四代工程學</a>
+  <a href="m3-agent-harness.html">M3 Agent</a>
+  <a href="m4-toolbox.html">M4 零件箱</a>
+  <a href="m5-products.html">M5 產品</a>
+  <a href="m6-safety.html">M6 安全</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">Module 4 · 打開來看</div>
+  <h1>零件箱<br>MCP、Skills、子代理</h1>
+  <p>你在網路上聽到的那堆縮寫，其實都是為了解決 M1 那個箱子的問題。一個一個拆給你看。</p>
+</div></header>
+
+<main><div class="wrap">
+
+  <h2 class="title"><span class="chnum">1</span>MCP：往箱子裡插工具的標準插頭</h2>
+  <p class="lede">全名 Model Context Protocol。名字嚇人，概念其實就是 USB。</p>
+
+  <div class="card">
+    <p><b>沒有 MCP 之前的世界：</b>你有 3 個 AI 工具，想接 4 個資料來源（Google Drive、Slack、資料庫、GitHub），你得寫 <b>3 × 4 = 12 組</b>客製串接。每多一個工具或來源，數量就爆炸。</p>
+    <p><b>有了 MCP 之後：</b>大家講好一套<b>共同的接法</b>。每個資料來源只要實作一次 MCP，任何支援 MCP 的 AI 都能接。<b>3 + 4 = 7 組</b>就夠了。</p>
+    <p class="muted">這就是 USB 幹過的事：在 USB 之前，滑鼠、鍵盤、印表機各有各的接頭；USB 出現後，一個孔全解決。MCP 是 Anthropic 在 2024 年 11 月提出的，現在已經變成跨廠商的通用標準。</p>
+  </div>
+
+  <figure class="fig">
+    <svg viewBox="0 0 640 230" role="img" aria-label="MCP 前後的串接數量比較">
+      <text x="20" y="20" font-size="13" font-weight="800" fill="var(--warn)">沒有標準：3 × 4 = 12 條線</text>
+      <g stroke="var(--warn)" stroke-width="1" opacity=".55">
+        <line x1="60" y1="50" x2="230" y2="45"/><line x1="60" y1="50" x2="230" y2="80"/>
+        <line x1="60" y1="50" x2="230" y2="115"/><line x1="60" y1="50" x2="230" y2="150"/>
+        <line x1="60" y1="95" x2="230" y2="45"/><line x1="60" y1="95" x2="230" y2="80"/>
+        <line x1="60" y1="95" x2="230" y2="115"/><line x1="60" y1="95" x2="230" y2="150"/>
+        <line x1="60" y1="140" x2="230" y2="45"/><line x1="60" y1="140" x2="230" y2="80"/>
+        <line x1="60" y1="140" x2="230" y2="115"/><line x1="60" y1="140" x2="230" y2="150"/>
+      </g>
+      <g font-size="10.5" text-anchor="middle">
+        <circle cx="60" cy="50" r="16" fill="var(--model-soft)" stroke="var(--model)"/><text x="60" y="54" fill="var(--model)">AI</text>
+        <circle cx="60" cy="95" r="16" fill="var(--model-soft)" stroke="var(--model)"/><text x="60" y="99" fill="var(--model)">AI</text>
+        <circle cx="60" cy="140" r="16" fill="var(--model-soft)" stroke="var(--model)"/><text x="60" y="144" fill="var(--model)">AI</text>
+        <rect x="205" y="33" width="52" height="24" rx="5" fill="var(--card)" stroke="var(--line)"/><text x="231" y="49" fill="var(--muted)">Drive</text>
+        <rect x="205" y="68" width="52" height="24" rx="5" fill="var(--card)" stroke="var(--line)"/><text x="231" y="84" fill="var(--muted)">Slack</text>
+        <rect x="205" y="103" width="52" height="24" rx="5" fill="var(--card)" stroke="var(--line)"/><text x="231" y="119" fill="var(--muted)">DB</text>
+        <rect x="205" y="138" width="52" height="24" rx="5" fill="var(--card)" stroke="var(--line)"/><text x="231" y="154" fill="var(--muted)">Git</text>
+      </g>
+
+      <text x="350" y="20" font-size="13" font-weight="800" fill="var(--harness)">有 MCP：3 + 4 = 7 條線</text>
+      <rect x="452" y="40" width="34" height="120" rx="8" fill="var(--brand-soft)" stroke="var(--brand)" stroke-width="2"/>
+      <text x="469" y="96" font-size="11" font-weight="800" text-anchor="middle" fill="var(--brand)" transform="rotate(-90 469 96)">MCP</text>
+      <g stroke="var(--harness)" stroke-width="1.4">
+        <line x1="406" y1="60" x2="450" y2="70"/><line x1="406" y1="100" x2="450" y2="100"/>
+        <line x1="406" y1="140" x2="450" y2="130"/>
+        <line x1="488" y1="70" x2="530" y2="55"/><line x1="488" y1="90" x2="530" y2="90"/>
+        <line x1="488" y1="110" x2="530" y2="125"/><line x1="488" y1="130" x2="530" y2="160"/>
+      </g>
+      <g font-size="10.5" text-anchor="middle">
+        <circle cx="390" cy="60" r="16" fill="var(--model-soft)" stroke="var(--model)"/><text x="390" y="64" fill="var(--model)">AI</text>
+        <circle cx="390" cy="100" r="16" fill="var(--model-soft)" stroke="var(--model)"/><text x="390" y="104" fill="var(--model)">AI</text>
+        <circle cx="390" cy="140" r="16" fill="var(--model-soft)" stroke="var(--model)"/><text x="390" y="144" fill="var(--model)">AI</text>
+        <rect x="532" y="43" width="52" height="24" rx="5" fill="var(--card)" stroke="var(--line)"/><text x="558" y="59" fill="var(--muted)">Drive</text>
+        <rect x="532" y="78" width="52" height="24" rx="5" fill="var(--card)" stroke="var(--line)"/><text x="558" y="94" fill="var(--muted)">Slack</text>
+        <rect x="532" y="113" width="52" height="24" rx="5" fill="var(--card)" stroke="var(--line)"/><text x="558" y="129" fill="var(--muted)">DB</text>
+        <rect x="532" y="148" width="52" height="24" rx="5" fill="var(--card)" stroke="var(--line)"/><text x="558" y="164" fill="var(--muted)">Git</text>
+      </g>
+      <text x="320" y="212" font-size="12" text-anchor="middle" fill="var(--muted)">MCP 之於 AI 工具，就像 USB 之於周邊設備</text>
+    </svg>
+    <figcaption>MCP 把「每個工具配每個 AI」的乘法，變成「各實作一次」的加法。</figcaption>
+  </figure>
+
+  <h2 class="title"><span class="chnum">2</span>Skills：需要時才載入的說明書</h2>
+  <p class="lede">直接回到 M1 的箱子問題：說明書很佔空間，但你多數時候用不到。</p>
+
+  <div class="card">
+    <p>假設你想教 AI 一百件事：怎麼寫你們公司的報告格式、怎麼操作實驗室儀器、怎麼產出投影片……</p>
+    <p><b>笨方法：</b>把一百份說明書全部塞進箱子。結果箱子還沒開始工作就滿了，而且它 99% 的時間都用不到那些。</p>
+    <p><b>Skills 的做法（漸進式揭露）：</b>箱子裡平常只放一百個<b>標題</b>（「這份是講報告格式的」），大概幾十個字。等模型判斷「這次真的需要報告格式」，harness 才把那一份完整內容<b>載進箱子</b>。</p>
+    <div class="note">
+      這跟你查書一模一樣：你不會把整本教科書背下來，你只記得目錄，需要時才翻到那一頁。
+      Skill 本身就是一個資料夾，裡面放一份說明文件，可能再附幾個腳本——<b>它不是模型的一部分，是 harness 的一部分</b>。
+    </div>
+  </div>
+
+  <h2 class="title"><span class="chnum">3</span>Sub-agent：開第二個箱子</h2>
+  <p class="lede">這是整門課最實用的一招，也是「為什麼子代理能省 token」的答案。</p>
+
+  <div class="card">
+    <p>想像你要 AI 做一件事：<b>「研究我們這個系統怎麼運作，然後改一行程式。」</b></p>
+    <p>「研究」這個動作會讀掉一大堆檔案。問題是——那些檔案內容，在真正動手改的時候<b>幾乎都用不到了</b>，你只需要結論。但它們已經佔滿了箱子，而且會<b>一路跟著你到對話結束</b>，因為每輪都要重寄（還記得 M1 嗎）。</p>
+    <p><b>子代理的做法：</b>派一個分身去做研究。分身有<b>自己獨立的箱子</b>，它在那裡讀個過癮，讀完只把<b>一小段結論</b>交回主箱子。那一大堆檔案內容，從頭到尾<b>沒有進過主箱子</b>。</p>
+  </div>
+
+  <div class="demo">
+    <div class="lbl">互動 · 子代理到底省在哪</div>
+    <p class="hint">任務要做三輪研究，每輪讀掉約 6,000 tokens 的檔案。按「跑一次」，看兩邊的主箱子差多少。</p>
+    <div class="row">
+      <button class="btn" id="saRun">▶ 跑一次</button>
+      <button class="btn ghost" id="saReset">重來</button>
+    </div>
+
+    <div class="split" style="margin-top:14px">
+      <div>
+        <div style="font-weight:800;font-size:14px;color:var(--warn);margin-bottom:4px">✗ 不用子代理</div>
+        <div class="ctxwin">
+          <div class="capbar"><span id="aUsed">已用 3,000</span><span>主箱子 40,000</span></div>
+          <div class="ctxtrack" id="aTrack"></div>
+        </div>
+        <p class="muted" style="font-size:13px;margin:6px 0 0" id="aNote">全部檔案內容都塞在主箱子裡。</p>
+      </div>
+      <div>
+        <div style="font-weight:800;font-size:14px;color:var(--harness);margin-bottom:4px">✓ 用子代理</div>
+        <div class="ctxwin">
+          <div class="capbar"><span id="bUsed">已用 3,000</span><span>主箱子 40,000</span></div>
+          <div class="ctxtrack" id="bTrack"></div>
+        </div>
+        <p class="muted" style="font-size:13px;margin:6px 0 0" id="bNote">主箱子只收到結論。</p>
+      </div>
+    </div>
+
+    <div class="outbox" id="saOut" style="margin-top:14px">
+      <p class="muted" style="margin:0">按上面的按鈕開始。</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <b>注意，這裡沒有魔法。</b>子代理讀那 18,000 tokens 的錢<b>還是要付</b>——它在自己的箱子裡照樣消耗。
+    省下來的不是「總花費」，而是<b>主箱子的空間</b>。而因為主箱子每一輪都要重寄，
+    留在裡面的東西會<b>被重複計費很多次</b>；讓它保持乾淨，長遠下來才是真的省，而且主對話能撐更久不失憶。
+  </div>
+
+  <h2 class="title"><span class="chnum">4</span>Multi-agent：很多箱子，以及它的代價</h2>
+
+  <div class="card">
+    <p>把子代理的想法推到極致：讓好幾個 agent 分工，一個查資料、一個寫程式、一個審查，彼此交談。這就是 <b>multi-agent（多代理）</b>。</p>
+    <p>聽起來很威，但要先破除一個迷思：</p>
+    <div class="tablewrap">
+      <table class="cmp">
+        <thead><tr><th style="min-width:110px"></th><th>常見說法</th><th>實務上</th></tr></thead>
+        <tbody>
+          <tr><td class="lab">多代理</td><td class="no">「是 agent 演化的完全體，一定更強」</td>
+              <td class="yes">是一種<b>取捨</b>，不是升級。代理之間要溝通、要傳遞脈絡，<b>常常更脆弱、更難除錯、更貴</b>。</td></tr>
+          <tr><td class="lab">什麼時候值得</td><td class="no">「任務很複雜就該用」</td>
+              <td class="yes">當子任務<b>彼此獨立、可以平行</b>時最有價值（例如同時查五個不相干的主題）。若步驟環環相扣，單一 agent 把迴圈跑穩通常更好。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">一個實用的判斷法：如果你沒辦法清楚說出「每個代理各自負責什麼、彼此要交換什麼」，那你需要的多半不是多代理，而是把單一 agent 的迴圈設計好。</p>
+  </div>
+
+  <div class="note">
+    <b>名詞小整理：</b>
+    <b>Sub-agent（子代理）</b>是主 agent 派出去的分身，做完就回報、然後消失，是<b>從屬</b>關係；
+    <b>Multi-agent（多代理）</b>泛指多個 agent 協作的架構，可能是平行的同儕。
+    兩者常被混用，但骨子裡都是同一招：<b>用額外的箱子，換主箱子的乾淨。</b>
+  </div>
+
+  <div class="pagenav">
+    <a href="m3-agent-harness.html">← M3 Agent</a>
+    <a class="next" href="m5-products.html">M5 · 產品怎麼變的 →</a>
+  </div>
+
+</div></main>
+
+<footer>
+  AI Agent 白話課 · M4 零件箱 · <a href="index.html">回課程地圖</a>
+</footer>
+
+<script src="assets/app.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var CAP = 40000, BASE = 3000;
+  var ROUNDS = [
+    { name:"研究 A", read:6000, sum:400 },
+    { name:"研究 B", read:6100, sum:420 },
+    { name:"研究 C", read:5900, sum:380 }
+  ];
+
+  var A = { segs:[], track:document.getElementById('aTrack'), used:document.getElementById('aUsed'), note:document.getElementById('aNote') };
+  var B = { segs:[], track:document.getElementById('bTrack'), used:document.getElementById('bUsed'), note:document.getElementById('bNote') };
+  var out = document.getElementById('saOut');
+  var runBtn = document.getElementById('saRun');
+  var running = false;
+
+  function reset(){
+    A.segs = [{cls:'sys', label:'系統提示', cost:BASE}];
+    B.segs = [{cls:'sys', label:'系統提示', cost:BASE}];
+    draw(A); draw(B);
+    Lab.clear(out);
+    out.appendChild(Lab.el('p', 'muted', '按上面的按鈕開始。'));
+    A.note.textContent = '全部檔案內容都塞在主箱子裡。';
+    B.note.textContent = '主箱子只收到結論。';
+  }
+
+  function draw(S){
+    Lab.clear(S.track);
+    var used = S.segs.reduce(function(s,x){ return s + x.cost; }, 0);
+    S.segs.forEach(function(s){
+      var d = Lab.el('div', 'ctxseg ' + s.cls);
+      var pct = (s.cost / CAP) * 100;
+      d.style.height = pct + '%';
+      if (pct > 9) d.textContent = s.label;
+      d.title = s.label + '：' + s.cost.toLocaleString() + ' tokens';
+      S.track.appendChild(d);
+    });
+    S.used.textContent = '已用 ' + used.toLocaleString() +
+      '（' + Math.round(used / CAP * 100) + '%）';
+    return used;
+  }
+
+  function total(S){ return S.segs.reduce(function(s,x){ return s + x.cost; }, 0); }
+
+  function finish(){
+    var a = total(A), b = total(B);
+    Lab.clear(out);
+
+    var p1 = document.createElement('p');
+    p1.style.margin = '.2em 0';
+    var s1 = Lab.el('b', null, '不用子代理：');
+    p1.appendChild(s1);
+    var v1 = Lab.el('span', null, '主箱子 ' + a.toLocaleString() + ' tokens（' + Math.round(a/CAP*100) + '% 滿）');
+    v1.style.color = 'var(--warn)';
+    p1.appendChild(v1);
+    out.appendChild(p1);
+
+    var p2 = document.createElement('p');
+    p2.style.margin = '.2em 0';
+    p2.appendChild(Lab.el('b', null, '用子代理：'));
+    var v2 = Lab.el('span', null, '主箱子 ' + b.toLocaleString() + ' tokens（' + Math.round(b/CAP*100) + '% 滿）');
+    v2.style.color = 'var(--harness)';
+    p2.appendChild(v2);
+    out.appendChild(p2);
+
+    var p3 = document.createElement('p');
+    p3.style.margin = '.6em 0 0';
+    p3.appendChild(Lab.el('b', null, '差距：'));
+    var totalRead = ROUNDS.reduce(function(s,r){ return s + r.read; }, 0);
+    p3.appendChild(Lab.el('span', null,
+      '主箱子少用了 ' + (a - b).toLocaleString() + ' tokens，約 ' +
+      (a / b).toFixed(1) + ' 倍。那 ' + totalRead.toLocaleString() +
+      ' tokens 的檔案內容從來沒進過主箱子——' +
+      '它們在子代理自己的箱子裡，回報完就丟掉了。'));
+    out.appendChild(p3);
+
+    A.note.textContent = '主箱子被檔案內容塞爆，之後每一輪都要重寄這一堆。';
+    B.note.textContent = '主箱子乾淨，還有很多空間可以繼續工作。';
+    runBtn.disabled = false;
+    running = false;
+  }
+
+  function run(){
+    if (running) return;
+    running = true;
+    runBtn.disabled = true;
+    reset();
+
+    var i = 0;
+    (function step(){
+      if (i >= ROUNDS.length) { setTimeout(finish, 300); return; }
+      var r = ROUNDS[i];
+
+      // 左：檔案原文直接進主箱子
+      A.segs.push({cls:'file', label:r.name + ' 檔案', cost:r.read});
+      // 右：只有結論進主箱子
+      B.segs.push({cls:'sum', label:r.name + ' 結論', cost:r.sum});
+
+      draw(A); draw(B);
+
+      Lab.clear(out);
+      var p = document.createElement('p');
+      p.style.margin = '0';
+      p.appendChild(Lab.el('b', null, '第 ' + (i+1) + ' 輪 · ' + r.name + '：'));
+      p.appendChild(Lab.el('span', null,
+        '讀了 ' + r.read.toLocaleString() + ' tokens 的檔案。' +
+        '左邊全部倒進主箱子；右邊的子代理只交回 ' + r.sum + ' tokens 的結論。'));
+      out.appendChild(p);
+
+      i++;
+      setTimeout(step, 900);
+    })();
+  }
+
+  runBtn.addEventListener('click', run);
+  document.getElementById('saReset').addEventListener('click', function(){
+    if (running) return;
+    reset();
+  });
+
+  reset();
+})();
+</script>
+</body>
+</html>

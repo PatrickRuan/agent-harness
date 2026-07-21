@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 · Agent = Model + Harness</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="sitebar"><div class="inner">
+  <a class="home" href="index.html">🏠 課程地圖</a>
+  <a href="m1-context-window.html">M1 箱子</a>
+  <a href="m2-four-eras.html">M2 四代工程學</a>
+  <a href="m3-agent-harness.html">M3 Agent</a>
+  <a href="m4-toolbox.html">M4 零件箱</a>
+  <a href="m5-products.html">M5 產品</a>
+  <a href="m6-safety.html">M6 安全</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">Module 3 · 核心概念</div>
+  <h1>Agent = Model + Harness</h1>
+  <p>模型是被關在密室裡的大腦。這一課講：怎麼幫它裝上身體，以及為什麼「會繞圈」才是關鍵。</p>
+  <div class="formula">
+    <span class="pill model">Model</span><span class="op">＋</span>
+    <span class="pill harness">Harness</span><span class="op">＝</span>
+    <span class="pill brand">Agent</span>
+  </div>
+</div></header>
+
+<main><div class="wrap">
+
+  <h2 class="title"><span class="chnum">1</span>先把兩邊分清楚</h2>
+  <p class="lede">這條界線，是理解整個 AI 應用世界的鑰匙。</p>
+
+  <div class="split">
+    <div class="box model">
+      <h4><span class="dot m"></span>Model ＝ 大腦</h4>
+      <p class="muted" style="font-size:14px;margin:.2em 0">一顆訓練好的神經網路。收到文字，吐出文字。</p>
+      <ul>
+        <li>理解意圖、推理</li>
+        <li>決定「下一步該做什麼」</li>
+        <li>本身<b>不會</b>上網、不存記憶、不執行任何動作</li>
+      </ul>
+    </div>
+    <div class="box harness">
+      <h4><span class="dot h"></span>Harness ＝ 骨架＋神經＋工具箱</h4>
+      <p class="muted" style="font-size:14px;margin:.2em 0">圍繞模型的那層程式碼。你寫的，或框架幫你寫的。</p>
+      <ul>
+        <li>組裝要餵進<b>箱子</b>的脈絡（M1 那個箱子）</li>
+        <li>派發並<b>實際執行</b>工具</li>
+        <li>跑<b>迴圈</b>、重試、控制權限與成本</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>模型像一顆很聰明、但被關在密室裡的大腦——能思考，但沒有手、沒有眼睛、也記不住昨天。<b>Harness 就是接上去的那副身體</b>：眼睛（讀資料）、手腳（呼叫工具）、神經（把訊息傳來傳去），還有那條「不准做危險事」的紅線。</p>
+  </div>
+
+  <h2 class="title"><span class="chnum">2</span>裝上手腳：工具怎麼運作</h2>
+  <p class="lede">模型自己不會上網查天氣。它能查，是因為 harness 做了一套「傳話」。</p>
+
+  <div class="card">
+    <ol style="margin:.4em 0;padding-left:20px">
+      <li>Harness 用 JSON 把「有哪些工具、怎麼用」<b>描述</b>給模型看。</li>
+      <li>模型看懂後說：「我要呼叫 <code class="inline">get_weather</code>，參數是台北」——它只是<b>輸出一段文字</b>，並沒有真的執行。</li>
+      <li>Harness <b>攔截</b>這段文字，實際去跑程式、連網、拿到氣溫。</li>
+      <li>Harness 把結果<b>放回箱子</b>，再呼叫一次模型，模型才組出人話回答你。</li>
+    </ol>
+    <div class="callout"><b>最容易搞混的一點：</b>模型負責「<b>決定</b>要做什麼」，harness 負責「<b>真的去做</b>」。工具的程式碼是你寫在 harness 裡的，不在模型裡面。模型只是說出它想呼叫誰。</div>
+  </div>
+
+  <div class="demo">
+    <div class="lbl">互動 · 一步步看 Agent 回答「台北現在幾度？」</div>
+    <p class="hint">按「下一步」，把模型與 harness 之間的來回攤開來看。</p>
+    <div class="row">
+      <button class="btn" id="stepNext">下一步 ▸</button>
+      <button class="btn ghost" id="stepReset">重來</button>
+    </div>
+    <div class="steps" id="stepBox">
+      <div class="step think"><div class="who">🧠 Model 思考</div><div class="txt">使用者問台北氣溫，我沒有即時資料，需要呼叫工具。</div></div>
+      <div class="step act"><div class="who">🧠 Model 輸出工具呼叫</div><div class="txt">送出 <code>get_weather({"city":"台北"})</code>（注意：這只是文字，還沒真的執行）</div></div>
+      <div class="step run"><div class="who">⚙️ Harness 執行</div><div class="txt">攔到呼叫 → 實際跑程式打氣象 API…</div></div>
+      <div class="step obs"><div class="who">⚙️ Harness 把結果放回箱子</div><div class="txt"><code>{"temp":32,"desc":"晴"}</code> 塞回對話，再呼叫一次模型。</div></div>
+      <div class="step answer"><div class="who">🧠 Model 最終回答</div><div class="txt">「台北現在大約 32°C，天氣晴，記得補水 ☀️」</div></div>
+    </div>
+  </div>
+
+  <details class="adv">
+    <summary>給有程式基礎的同學：這段真的長什麼樣（可跳過）</summary>
+    <div class="body">
+      <p class="muted" style="font-size:14px">沒學過 Python 完全不用看懂，掃一眼知道「工具是寫在外面的程式」就夠了。</p>
+      <div class="code">
+        <div class="bar"><span class="fn">agent.py — 幫模型裝上一個工具</span><button class="copy">複製</button></div>
+        <pre><code><span class="cm"># harness 工作：用 JSON 描述「有哪些工具」給模型看</span>
+tools = [{
+  <span class="st">"type"</span>: <span class="st">"function"</span>,
+  <span class="st">"function"</span>: {
+    <span class="st">"name"</span>: <span class="st">"get_weather"</span>,
+    <span class="st">"description"</span>: <span class="st">"查詢某城市目前氣溫"</span>,
+    <span class="st">"parameters"</span>: {<span class="st">"type"</span>:<span class="st">"object"</span>,
+      <span class="st">"properties"</span>:{<span class="st">"city"</span>:{<span class="st">"type"</span>:<span class="st">"string"</span>}},
+      <span class="st">"required"</span>:[<span class="st">"city"</span>]}
+  }
+}]
+
+<span class="kw">def</span> get_weather(city):          <span class="cm"># ← 工具的「真身」寫在 harness 裡</span>
+    <span class="kw">return</span> {<span class="st">"temp"</span>: <span class="nm">32</span>, <span class="st">"desc"</span>: <span class="st">"晴"</span>}
+
+messages = [{<span class="st">"role"</span>:<span class="st">"user"</span>,<span class="st">"content"</span>:<span class="st">"台北現在幾度？"</span>}]
+resp = client.chat.completions.create(
+    model=<span class="st">"gpt-4o-mini"</span>, messages=messages, tools=tools)
+
+msg = resp.choices[<span class="nm">0</span>].message
+<span class="kw">if</span> msg.tool_calls:                    <span class="cm"># 模型「決定」要用工具</span>
+    call = msg.tool_calls[<span class="nm">0</span>]
+    args = json.loads(call.function.arguments)
+    result = get_weather(**args)       <span class="cm"># harness「真的」執行</span>
+
+    <span class="cm"># 把結果放回箱子，再問一次 → 這就是迴圈的一圈</span>
+    messages.append(msg)
+    messages.append({<span class="st">"role"</span>:<span class="st">"tool"</span>,
+        <span class="st">"tool_call_id"</span>:call.id,
+        <span class="st">"content"</span>:json.dumps(result)})
+    final = client.chat.completions.create(
+        model=<span class="st">"gpt-4o-mini"</span>, messages=messages)
+    print(final.choices[<span class="nm">0</span>].message.content)</code></pre>
+      </div>
+    </div>
+  </details>
+
+  <h2 class="title"><span class="chnum">3</span>靈魂不是工具，是迴圈</h2>
+  <p class="lede">很多人以為「有工具就是 Agent」。更準確地說：Agent 是<b>會自己一圈一圈跑到完成</b>的東西。</p>
+
+  <div class="note">
+    <b>給電機系的類比：這就是回授控制系統。</b><br>
+    你們之後會學到的 sense → decide → actuate → 再 sense，跟 agent 的
+    <b>想 → 動手 → 看結果 → 再想</b> 是同一個結構。
+    模型是控制器，工具是致動器，工具回傳的結果是感測器讀值，任務完成條件就是設定點（setpoint）。
+    <b>沒有回授的 agent，就是開迴路控制</b>——你只能祈禱它一次做對。
+  </div>
+
+  <div class="card">
+    <p>純聊天是「你問一句、它答一句」。Agent 會反覆：查完發現要改條件、算錯了自己重算、寫完程式跑測試沒過就回頭修——直到達標或撞到你設的上限。</p>
+    <div class="loop" id="loopViz">
+      <div class="node" data-k="0">🧠 想<small>think</small></div>
+      <div class="arrow">→</div>
+      <div class="node" data-k="1">✋ 動手<small>act</small></div>
+      <div class="arrow">→</div>
+      <div class="node" data-k="2">👀 看結果<small>observe</small></div>
+      <div class="arrow">→</div>
+      <div class="node" data-k="3">✅ 完成？<small>done?</small></div>
+    </div>
+    <div class="row" style="justify-content:center;margin-top:14px">
+      <button class="btn" id="loopRun">▶ 播放</button>
+    </div>
+    <p class="muted" style="text-align:center;font-size:13px;margin-top:8px">
+      沒完成就回到「想」，再繞一圈。這個迴圈就是 harness 的心臟。
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>真實情況：它常常會失敗、然後自己修</h3>
+    <p>教科書的迴圈圖看起來很漂亮，實際跑起來大多長這樣：</p>
+    <div class="steps">
+      <div class="step think on"><div class="who">第 1 圈 · 想</div><div class="txt">我要修這個 bug，先改這個檔案。</div></div>
+      <div class="step run on"><div class="who">第 1 圈 · 動手</div><div class="txt">改完，跑測試。</div></div>
+      <div class="step bad on"><div class="who">第 1 圈 · 看結果 ✗</div><div class="txt">測試沒過，跳出三個錯誤。</div></div>
+      <div class="step think on"><div class="who">第 2 圈 · 想</div><div class="txt">喔，我漏掉一個相依。改別的地方。</div></div>
+      <div class="step obs on"><div class="who">第 2 圈 · 看結果 ✓</div><div class="txt">測試全過，收工。</div></div>
+    </div>
+    <p class="muted">這種「自己撞牆、自己爬起來」的能力，正是 agent 和聊天機器人最大的差別。而<b>什麼時候該放棄別再撞了</b>，就是 M2 講的 loop engineering 在管的事。</p>
+  </div>
+
+  <h2 class="title"><span class="chnum">4</span>幾個常見的誤會</h2>
+
+  <div class="tablewrap">
+    <table class="cmp">
+      <thead><tr><th style="min-width:110px">主題</th><th>常聽到的說法</th><th>更精準的說法</th></tr></thead>
+      <tbody>
+        <tr><td class="lab">Agent 的定義</td><td class="no">「有工具＝Agent」</td>
+            <td class="yes">靈魂是<b>迴圈</b>：想→做→看→再想，反覆到完成。工具只是迴圈裡的一步。</td></tr>
+        <tr><td class="lab">Harness 的威力</td><td class="no">「好 harness 能讓弱模型贏過強模型」</td>
+            <td class="yes">講太滿。準確版：<b>同一個模型在不同 harness 下差很多</b>；harness 品質有時和模型一樣重要。但拿弱模型硬碰強模型，通常還是輸。</td></tr>
+        <tr><td class="lab">框架 vs harness</td><td class="no">「LangChain 就是 harness」</td>
+            <td class="yes">那些是 <b>framework</b>（幫你蓋 harness 的工具箱），不等於 harness 本身。很多正式產品為了可控，反而自己手寫。</td></tr>
+        <tr><td class="lab">名詞的年紀</td><td class="no">「harness 是個老詞」</td>
+            <td class="yes">薄薄一層 wrapper 的<b>概念</b>很早就有；但這個<b>詞</b>被廣泛使用是 2024–2026 才發生的事。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagenav">
+    <a href="m2-four-eras.html">← M2 四代工程學</a>
+    <a class="next" href="m4-toolbox.html">M4 · 零件箱 →</a>
+  </div>
+
+</div></main>
+
+<footer>
+  AI Agent 白話課 · M3 Agent = Model + Harness · <a href="index.html">回課程地圖</a>
+</footer>
+
+<script src="assets/app.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  Lab.stepper({ steps:'#stepBox .step', next:'#stepNext', reset:'#stepReset' });
+
+  var loopNodes = Array.prototype.slice.call(document.querySelectorAll('#loopViz .node'));
+  var loopBtn = document.getElementById('loopRun');
+  var timer = null;
+  loopBtn.addEventListener('click', function(){
+    if (timer) return;
+    var i = 0;
+    loopBtn.disabled = true;
+    (function tick(){
+      loopNodes.forEach(function(n,k){ n.classList.toggle('on', k === i); });
+      i++;
+      if (i <= loopNodes.length) {
+        timer = setTimeout(tick, 620);
+      } else {
+        timer = setTimeout(function(){
+          loopNodes.forEach(function(n){ n.classList.remove('on'); });
+          loopBtn.disabled = false;
+          timer = null;
+        }, 450);
+      }
+    })();
+  });
+})();
+</script>
+</body>
+</html>

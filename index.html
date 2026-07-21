@@ -3,688 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>從聊天玩具到 Agent：Harness 到底是什麼</title>
-<style>
-  :root{
-    --bg:#f6f7f9; --card:#ffffff; --ink:#1c2430; --muted:#5c6675;
-    --line:#e4e8ee; --brand:#2f6df6; --brand-soft:#eaf1ff;
-    --model:#7c4dff; --model-soft:#f0ebff;
-    --harness:#0a9d6e; --harness-soft:#e4f6ef;
-    --warn:#e8820a; --warn-soft:#fdf0dd;
-    --code-bg:#0f1626; --code-ink:#d7e0f4; --code-key:#79b8ff; --code-str:#9ecb8a; --code-com:#6b7793;
-    --radius:14px; --shadow:0 1px 2px rgba(20,30,50,.06),0 6px 22px rgba(20,30,50,.06);
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#0e1117; --card:#161b24; --ink:#e7ecf3; --muted:#9aa5b5;
-      --line:#28303c; --brand:#5b8cff; --brand-soft:#182338;
-      --model:#a78bff; --model-soft:#211b33; --harness:#39c99a; --harness-soft:#122a24;
-      --warn:#f2a53a; --warn-soft:#2c2413;
-      --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 26px rgba(0,0,0,.35);
-    }
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
-    line-height:1.75; -webkit-font-smoothing:antialiased;
-  }
-  a{color:var(--brand)}
-  .wrap{max-width:860px;margin:0 auto;padding:0 20px}
-
-  header.hero{
-    padding:56px 20px 30px; text-align:center;
-    background:radial-gradient(1200px 300px at 50% -60px,var(--brand-soft),transparent);
-  }
-  .hero .kicker{color:var(--brand);font-weight:700;letter-spacing:.12em;font-size:13px;text-transform:uppercase}
-  .hero h1{font-size:clamp(26px,5vw,40px);margin:.35em 0 .15em;line-height:1.25}
-  .hero p{color:var(--muted);max-width:640px;margin:.4em auto 0;font-size:17px}
-  .formula{
-    display:inline-flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;
-    margin-top:22px;font-weight:800;font-size:clamp(18px,4vw,24px)
-  }
-  .pill{padding:6px 14px;border-radius:999px}
-  .pill.model{background:var(--model-soft);color:var(--model)}
-  .pill.harness{background:var(--harness-soft);color:var(--harness)}
-  .plus,.eq{color:var(--muted);font-weight:600}
-
-  /* sticky tab nav */
-  nav.tabs{
-    position:sticky;top:0;z-index:20;background:var(--bg);
-    border-bottom:1px solid var(--line);
-  }
-  nav.tabs .inner{max-width:860px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:8px 12px;scrollbar-width:thin}
-  nav.tabs button{
-    flex:0 0 auto;border:0;background:transparent;color:var(--muted);
-    font:inherit;font-weight:600;font-size:14px;padding:8px 12px;border-radius:9px;cursor:pointer;white-space:nowrap
-  }
-  nav.tabs button:hover{color:var(--ink);background:var(--brand-soft)}
-  nav.tabs button.active{color:var(--brand);background:var(--brand-soft)}
-
-  main{padding:26px 0 80px}
-  section.chapter{display:none;animation:fade .3s ease}
-  section.chapter.active{display:block}
-  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-
-  .chnum{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;
-    background:var(--brand);color:#fff;font-weight:800;font-size:15px;margin-right:10px}
-  h2.title{font-size:24px;margin:.2em 0 .1em;display:flex;align-items:center}
-  .lede{color:var(--muted);margin:.2em 0 1.2em;font-size:16px}
-
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin:16px 0;box-shadow:var(--shadow)}
-  .card h3{margin:.1em 0 .5em;font-size:17px}
-  .card p{margin:.5em 0}
-  .muted{color:var(--muted)}
-  .tagrow{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
-  .tag{font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--brand-soft);color:var(--brand)}
-  .tag.m{background:var(--model-soft);color:var(--model)}
-  .tag.h{background:var(--harness-soft);color:var(--harness)}
-
-  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  @media(max-width:680px){.split{grid-template-columns:1fr}}
-  .box{border:1px solid var(--line);border-radius:12px;padding:16px}
-  .box.model{border-color:color-mix(in srgb,var(--model) 40%,var(--line))}
-  .box.harness{border-color:color-mix(in srgb,var(--harness) 40%,var(--line))}
-  .box h4{margin:0 0 .3em;font-size:15px;display:flex;align-items:center;gap:8px}
-  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
-  .dot.m{background:var(--model)} .dot.h{background:var(--harness)}
-  .box ul{margin:.4em 0 0;padding-left:18px} .box li{margin:.25em 0;font-size:14.5px}
-
-  /* code */
-  .code{position:relative;background:var(--code-bg);border-radius:12px;margin:14px 0;overflow:hidden}
-  .code .bar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.08)}
-  .code .bar .fn{color:#8b97ad;font-size:12.5px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-  .code button.copy{border:1px solid rgba(255,255,255,.18);background:transparent;color:#c7d2e6;font:inherit;font-size:12px;
-    padding:3px 10px;border-radius:7px;cursor:pointer}
-  .code button.copy:hover{background:rgba(255,255,255,.08)}
-  .code pre{margin:0;padding:14px 16px;overflow-x:auto}
-  .code code{font-family:ui-monospace,SFMono-Regular,Menlo,"Cascadia Code",monospace;font-size:13px;line-height:1.65;color:var(--code-ink);white-space:pre}
-  .kw{color:var(--code-key)} .st{color:var(--code-str)} .cm{color:var(--code-com);font-style:italic} .nm{color:#e0a458}
-
-  /* interactive */
-  .demo{border:1px dashed color-mix(in srgb,var(--brand) 40%,var(--line));border-radius:12px;padding:16px;margin:14px 0;background:var(--brand-soft)}
-  .demo .lbl{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--brand);margin-bottom:8px}
-  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  input[type=text]{flex:1;min-width:180px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}
-  button.btn{border:0;background:var(--brand);color:#fff;font:inherit;font-weight:700;padding:10px 16px;border-radius:10px;cursor:pointer}
-  button.btn:hover{filter:brightness(1.06)} button.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
-  button.btn:disabled{opacity:.45;cursor:not-allowed}
-
-  .msgs{margin-top:12px;display:flex;flex-direction:column;gap:8px}
-  .msg{border-radius:10px;padding:8px 12px;font-size:14px;border:1px solid var(--line);background:var(--card)}
-  .msg .role{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
-  .msg .body{margin-top:2px}
-  .msg.system{border-left:4px solid var(--muted)}
-  .msg.user{border-left:4px solid var(--brand)}
-  .msg.assistant{border-left:4px solid var(--harness)}
-  .msg.tool{border-left:4px solid var(--warn);font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
-
-  .steps{margin-top:12px;display:flex;flex-direction:column;gap:8px}
-  .step{opacity:.28;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--card);transition:opacity .25s,transform .25s}
-  .step.on{opacity:1;transform:none}
-  .step .who{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
-  .step.think .who{color:var(--model)} .step.act .who{color:var(--brand)}
-  .step.run .who{color:var(--warn)} .step.obs .who{color:var(--harness)} .step.answer .who{color:var(--harness)}
-  .step .txt{font-size:14px;margin-top:2px}
-  .step code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:var(--brand-soft);padding:1px 6px;border-radius:6px}
-
-  .loop{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:6px 0 2px}
-  .node{border:2px solid var(--line);border-radius:12px;padding:10px 14px;font-weight:700;font-size:14px;min-width:96px;text-align:center;background:var(--card)}
-  .node.on{border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
-  .node small{display:block;font-weight:400;font-size:12px}
-  .arrow{align-self:center;color:var(--muted);font-size:20px}
-
-  .toggle{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:10px}
-  .toggle button{border:0;background:var(--card);color:var(--muted);font:inherit;font-weight:700;padding:8px 14px;cursor:pointer}
-  .toggle button.active{background:var(--brand);color:#fff}
-  .outbox{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--card);font-size:14.5px}
-  .outbox p{margin:.5em 0}
-  .flow{font-size:12.5px;color:var(--muted);margin-bottom:8px;font-family:ui-monospace,Menlo,monospace}
-
-  table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px;display:block;overflow-x:auto}
-  table.cmp th,table.cmp td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top;min-width:150px}
-  table.cmp th{background:var(--brand-soft);color:var(--ink);font-size:12.5px}
-  table.cmp td.no{color:var(--warn)} table.cmp td.yes{color:var(--harness)}
-  .cmp .lab{font-weight:800}
-
-  .callout{border-left:4px solid var(--warn);background:var(--warn-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0;font-size:14.5px}
-  .callout b{color:var(--warn)}
-  .note{border-left:4px solid var(--harness);background:var(--harness-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0;font-size:14.5px}
-
-  footer{border-top:1px solid var(--line);padding:26px 20px;text-align:center;color:var(--muted);font-size:13.5px}
-  .navbtns{display:flex;justify-content:space-between;gap:10px;margin-top:26px}
-  .navbtns button{flex:1}
-</style>
+<title>AI Agent 白話課 · 從聊天玩具到會做事的 AI</title>
+<link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
-<header class="hero">
-  <div class="wrap">
-    <div class="kicker">白話拆解</div>
-    <h1>從「聊天玩具」到 Agent<br>Harness 到底是什麼？</h1>
-    <p>一頁把「模型」跟「外面那層程式」的界線講清楚。可以親手撥動的互動教學。</p>
-    <div class="formula">
-      <span class="pill model">Model</span>
-      <span class="plus">＋</span>
-      <span class="pill harness">Harness</span>
-      <span class="eq">＝</span>
-      <span style="color:var(--brand)">Agent</span>
+<nav class="sitebar"><div class="inner">
+  <a class="home" href="index.html">🏠 課程地圖</a>
+  <a href="m1-context-window.html">M1 箱子</a>
+  <a href="m2-four-eras.html">M2 四代工程學</a>
+  <a href="m3-agent-harness.html">M3 Agent</a>
+  <a href="m4-toolbox.html">M4 零件箱</a>
+  <a href="m5-products.html">M5 產品</a>
+  <a href="m6-safety.html">M6 安全</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">六堂課 · 可互動 · 不需要程式基礎</div>
+  <h1>AI Agent 白話課<br>從聊天玩具到會做事的 AI</h1>
+  <p>網路上那堆名詞——prompt engineering、context engineering、harness、MCP、sub-agent、vibe coding——
+     其實都在解決<b>同一個問題</b>。這門課用一根主軸把它們串起來。</p>
+  <div class="formula">
+    <span class="pill model">Model</span><span class="op">＋</span>
+    <span class="pill harness">Harness</span><span class="op">＝</span>
+    <span class="pill brand">Agent</span>
+  </div>
+</div></header>
+
+<main><div class="wrap">
+
+  <h2 class="title"><span class="chnum">★</span>這門課的主軸：一個有限的箱子</h2>
+
+  <div class="card">
+    <p>如果你只能記住一件事，記住這個：</p>
+    <p style="font-size:16.5px;text-align:center;color:var(--brand);font-weight:800;margin:.8em 0">
+      模型沒有記憶，而它的視野是一個有限的箱子。
+    </p>
+    <p>所有你聽過的縮寫，翻譯過來都是同一個問題的不同答案——<b>誰、在什麼時候、把什麼東西放進這個箱子</b>：</p>
+    <div class="tablewrap">
+      <table class="cmp">
+        <thead><tr><th style="min-width:150px">聽起來很潮的名詞</th><th>翻成白話</th></tr></thead>
+        <tbody>
+          <tr><td class="lab">Prompt engineering</td><td>把箱子裡的<b>字寫好</b></td></tr>
+          <tr><td class="lab">Context engineering</td><td>決定箱子裡<b>該放什麼</b></td></tr>
+          <tr><td class="lab">Harness</td><td>負責<b>裝箱、並反覆呼叫模型</b>的那支程式</td></tr>
+          <tr><td class="lab">Loop engineering</td><td>設計那個<b>一直重裝箱子</b>的循環</td></tr>
+          <tr><td class="lab">Sub-agent</td><td>開<b>第二個箱子</b>，別把主箱子弄髒</td></tr>
+          <tr><td class="lab">MCP</td><td>往箱子裡<b>插工具的標準插頭</b></td></tr>
+          <tr><td class="lab">Skills</td><td>說明書<b>需要時才載入</b></td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
-</header>
 
-<nav class="tabs">
-  <div class="inner" id="tabbar"></div>
-</nav>
+  <h2 class="title"><span class="chnum">6</span>六個模組</h2>
+  <p class="lede">建議照順序上。M1 是地基，後面全部靠它。</p>
 
-<main>
-<div class="wrap">
+  <div class="modgrid">
+    <a class="modcard" href="m1-context-window.html">
+      <div class="mnum">MODULE 1 · 地基</div>
+      <h3>那個箱子</h3>
+      <p>模型其實沒有記憶。脈絡視窗是什麼、為什麼它決定了一切。含「把箱子塞爆」互動。</p>
+      <span class="mins">約 12 分鐘</span>
+    </a>
+    <a class="modcard" href="m2-four-eras.html">
+      <div class="mnum">MODULE 2 · 歷史</div>
+      <h3>四代工程學</h3>
+      <p>prompt → context → harness → loop。六年四次改名，每次都代表發現了什麼。含時間軸互動。</p>
+      <span class="mins">約 12 分鐘</span>
+    </a>
+    <a class="modcard" href="m3-agent-harness.html">
+      <div class="mnum">MODULE 3 · 核心</div>
+      <h3>Agent = Model + Harness</h3>
+      <p>工具怎麼運作、為什麼「迴圈」才是靈魂（電機系：這就是回授控制）。含逐步拆解互動。</p>
+      <span class="mins">約 15 分鐘</span>
+    </a>
+    <a class="modcard" href="m4-toolbox.html">
+      <div class="mnum">MODULE 4 · 零件</div>
+      <h3>零件箱</h3>
+      <p>MCP、Skills、子代理、多代理各是什麼。含「子代理到底省在哪」的雙箱子對比動畫。</p>
+      <span class="mins">約 15 分鐘</span>
+    </a>
+    <a class="modcard" href="m5-products.html">
+      <div class="mnum">MODULE 5 · 現況</div>
+      <h3>從 Chatbot 到 Agentic AI</h3>
+      <p>OpenClaw、Hermes 這些 2026 年爆紅的產品在紅什麼。vibe coding 又是什麼、陷阱在哪。</p>
+      <span class="mins">約 12 分鐘</span>
+    </a>
+    <a class="modcard" href="m6-safety.html">
+      <div class="mnum">MODULE 6 · 必修</div>
+      <h3>安全、成本與評估</h3>
+      <p>提示注入攻擊實際演一次、為什麼迴圈會燒錢、怎麼知道它真的做對了。<b>要動手玩的人請務必看。</b></p>
+      <span class="mins">約 15 分鐘</span>
+    </a>
+  </div>
 
-  <!-- ① -->
-  <section class="chapter active" data-title="① 一句話總結">
-    <h2 class="title"><span class="chnum">1</span>一句話：Agent = Model + Harness</h2>
-    <p class="lede">先給結論，再慢慢拆。這條界線是理解整個 AI 應用世界的鑰匙。</p>
+  <h2 class="title"><span class="chnum">?</span>幾件先說清楚的事</h2>
 
-    <div class="split">
-      <div class="box model">
-        <h4><span class="dot m"></span>Model ＝ 大腦</h4>
-        <p class="muted" style="font-size:14px;margin:.2em 0">一顆訓練好的神經網路。收到文字，吐出文字。</p>
-        <ul>
-          <li>理解意圖、推理</li>
-          <li>決定「下一步該做什麼」</li>
-          <li>本身<b>不會</b>上網、不會存記憶、不會執行任何動作</li>
-        </ul>
-      </div>
-      <div class="box harness">
-        <h4><span class="dot h"></span>Harness ＝ 骨架＋神經＋工具箱</h4>
-        <p class="muted" style="font-size:14px;margin:.2em 0">圍繞著模型的那層程式碼。你寫的、或框架幫你寫的。</p>
-        <ul>
-          <li>組裝要餵給模型的<b>脈絡（context）</b></li>
-          <li>派發並實際執行<b>工具（tools）</b></li>
-          <li>跑<b>迴圈（loop）</b>、重試、控制邊界與安全</li>
-        </ul>
-      </div>
+  <div class="card">
+    <h3>需要程式基礎嗎？</h3>
+    <p>不需要。全部用白話講，程式碼只在少數地方出現，而且都收在「<b>給有程式基礎的同學</b>」的摺疊區裡——不打開完全不影響理解。</p>
+  </div>
+
+  <div class="card">
+    <h3>頁面上的互動是真的在跑 AI 嗎？</h3>
+    <p>不是。所有互動都是<b>前端模擬</b>，不會連網、不需要金鑰。原因有二：一是<b>不該把 API 金鑰放進公開網頁</b>（這本身就是 M6 會講的安全問題）；二是教學重點在「看懂流程」，模擬就夠清楚了。</p>
+  </div>
+
+  <div class="card">
+    <h3>資訊有多新？可信嗎？</h3>
+    <p>內容涵蓋到 <b>2026 年 7 月</b>。裡面的日期、人名、產品都經過查證，不是憑印象寫的。</p>
+    <p>比較新的說法我會<b>誠實標註</b>——例如「harness engineering」和「loop engineering」都是 2026 年才出現的詞，後者寫這頁時只有一個多月大，未必會留下來。<b>學觀念，不要背名詞。</b></p>
+  </div>
+
+  <div class="note">
+    <b>給老師：</b>這是一份靜態網頁教材，零外部相依、可離線開啟、可自由取用修改。
+    每個模組都能獨立當一節課，建議搭配課堂上實際打開一個 agent 工具邊講邊看。
+    M6 建議不要省略——學生一旦自己去裝 OpenClaw 這類工具，那一課的內容就是他們的安全帶。
+  </div>
+
+  <h2 class="title"><span class="chnum">↻</span>這門課是怎麼做出來的</h2>
+
+  <div class="card">
+    <p>這份教材本身就是一個「人給目標、AI 跑迴圈」的例子——也就是 M3 講的那個迴圈。過程大致是：</p>
+    <ul>
+      <li><b>先規劃再動工</b>：不是開口就寫程式，而是先確認受眾（大一電機系、不預設程式背景）、決定要不要拆成多頁、要不要加安全章節，寫成計畫、確認之後才建置。</li>
+      <li><b>查證勝過印象</b>：AI 的知識有截止日。寫這頁時，「loop engineering」和 Hermes Agent 都在截止日之後才出現——<b>如果照記憶寫，就會寫錯，甚至會理直氣壯地「糾正」正確的說法</b>。所以產品與日期全部另外查過。</li>
+      <li><b>在瀏覽器裡真的驗證</b>：每個互動都實際點過、深色模式與手機寬度都看過、主控台確認無錯誤，而不是寫完就當它會動。</li>
+      <li><b>純靜態、零相依</b>：整站只有 HTML／CSS／JS，沒有任何外部套件或 CDN，所以可離線、可長期保存、不會因為某個服務關掉就壞掉。</li>
+    </ul>
+    <div class="note" style="margin-bottom:0">
+      這中間最值得學的一課是第二點：<b>AI 最危險的時候，不是它說「我不知道」，而是它用同樣自信的語氣講一件過期或錯誤的事。</b>
+      會查證、會要求證據，比會下提示詞重要得多。
     </div>
+  </div>
 
-    <div class="card">
-      <h3>一個比喻</h3>
-      <p>模型像一顆很聰明、但被關在密室裡的大腦——它能思考，但沒有手、沒有眼睛、也記不住昨天。<b>Harness 就是接到這顆大腦上的身體</b>：眼睛（讀資料）、手腳（呼叫工具）、脊椎與神經（把訊息傳來傳去、跑迴圈），還有那條「不准做危險事」的紅線。</p>
-      <p class="muted">這一頁接下來，就是照著歷史順序，看這副「身體」怎麼從 30 行長成今天的樣子。</p>
-    </div>
-
-    <div class="navbtns"><span></span><button class="btn" data-go="1">下一章：最原始的樣子 →</button></div>
-  </section>
-
-  <!-- ② -->
-  <section class="chapter" data-title="② 最原始：30 行 Python">
-    <h2 class="title"><span class="chnum">2</span>最原始的樣子：20–30 行 Python 聊天</h2>
-    <p class="lede">早期我們剛拿到 LLM API，寫的程式其實就是「第一代 harness」——最輕薄的一層。</p>
-
-    <div class="card">
-      <p>那時候模型只是個<b>「文字接龍機」</b>：你給它一串對話，它接下一句。那 30 行程式碼只負責三件小事：</p>
-      <div class="tagrow">
-        <span class="tag h">1. 設定 system prompt（角色）</span>
-        <span class="tag h">2. 把對話堆進 messages 陣列</span>
-        <span class="tag h">3. 呼叫 API、印出回覆</span>
-      </div>
-      <p class="muted">關鍵觀念：模型<b>沒有記憶</b>。它會「記得」前面聊過什麼，唯一的原因是——<b>你每一輪都把整串 <code>messages</code> 再寄一次給它</b>。維護這串陣列，就是 harness 最原始的工作。</p>
-    </div>
-
-    <div class="demo">
-      <div class="lbl">互動 · 看 messages 陣列怎麼長大</div>
-      <p style="margin:.2em 0 10px;font-size:14px" class="muted">打一句話送出，看看 harness 幫你維護的對話陣列多了哪兩則。（純前端模擬，不會真的連網）</p>
-      <div class="row">
-        <input id="chatInput" type="text" placeholder="例如：幫我想三個週末的活動" >
-        <button class="btn" id="chatSend">送出</button>
-        <button class="btn ghost" id="chatReset">重來</button>
-      </div>
-      <div class="msgs" id="chatMsgs"></div>
-      <p class="muted" id="chatCount" style="font-size:12.5px;margin-top:10px"></p>
-    </div>
-
-    <div class="code">
-      <div class="bar"><span class="fn">chat.py — 最原始的 harness（真實可跑）</span><button class="copy" data-code="c1">複製</button></div>
-      <pre><code id="c1"><span class="cm"># pip install openai</span>
-<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
-
-client = OpenAI(api_key=<span class="st">"sk-..."</span>)  <span class="cm"># ← 換成你自己的金鑰</span>
-
-<span class="cm"># harness 工作 1：設定角色，並開一個對話陣列</span>
-messages = [
-    {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: <span class="st">"你是一個友善、簡潔的中文助理。"</span>},
-]
-
-<span class="kw">while</span> <span class="kw">True</span>:
-    user = input(<span class="st">"你："</span>)
-    <span class="kw">if</span> user.strip() <span class="kw">in</span> {<span class="st">"exit"</span>, <span class="st">"quit"</span>}:
-        <span class="kw">break</span>
-
-    <span class="cm"># harness 工作 2：把使用者這句話堆進陣列</span>
-    messages.append({<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: user})
-
-    <span class="cm"># harness 工作 3：把「整串」對話寄給模型（模型沒有記憶！）</span>
-    resp = client.chat.completions.create(
-        model=<span class="st">"gpt-4o-mini"</span>,
-        messages=messages,
-    )
-    reply = resp.choices[<span class="nm">0</span>].message.content
-    print(<span class="st">"AI："</span>, reply)
-
-    <span class="cm"># 把 AI 的回覆也存回陣列，下一輪才接得上</span>
-    messages.append({<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: reply})</code></pre>
-    </div>
-    <p class="muted" style="font-size:13.5px">補充：更早期（2023 GPT-3.5 剛開放）寫法是 <code>openai.ChatCompletion.create(...)</code>，概念一模一樣，只是新版 SDK 改成先建 <code>client</code>。無論哪種，這整段就是最小的 harness。</p>
-
-    <div class="navbtns"><button class="btn ghost" data-go="0">← 上一章</button><button class="btn" data-go="2">下一章：裝上手腳 →</button></div>
-  </section>
-
-  <!-- ③ -->
-  <section class="chapter" data-title="③ 裝上手腳 = Agent">
-    <h2 class="title"><span class="chnum">3</span>裝上手腳：Tool use ＝ 這才叫 Agent</h2>
-    <p class="lede">當我們不滿足於純聊天，想讓它查資料、算數、發信——就得幫模型裝上「手腳」。</p>
-
-    <div class="card">
-      <p>模型自己<b>不會</b>上網查天氣。它能查，是因為 harness 做了這套「傳話」：</p>
-      <ol style="margin:.4em 0;padding-left:20px">
-        <li>Harness 用 JSON 把「有哪些工具、怎麼用」<b>描述</b>給模型看。</li>
-        <li>模型看懂後說：「我要呼叫 <code>get_weather</code>，參數是台北」——它只是<b>輸出一段 JSON</b>，並沒有真的執行。</li>
-        <li>Harness <b>攔截</b>這段 JSON，實際去跑 Python、連網、拿到 25°C。</li>
-        <li>Harness 把結果<b>餵回</b>給模型，模型才組出人話回答你。</li>
-      </ol>
-      <div class="callout"><b>重點：</b>模型負責「決定要做什麼」，harness 負責「真的去做」。工具的程式碼是你寫在 harness 裡的，不在模型裡。</div>
-    </div>
-
-    <div class="demo">
-      <div class="lbl">互動 · 一步步看 Agent 怎麼回答「台北現在幾度？」</div>
-      <p style="margin:.2em 0 10px;font-size:14px" class="muted">按「下一步」，把模型與 harness 之間的來回攤開來看。</p>
-      <div class="row">
-        <button class="btn" id="stepNext">下一步 ▸</button>
-        <button class="btn ghost" id="stepReset">重來</button>
-      </div>
-      <div class="steps" id="stepBox">
-        <div class="step think"><div class="who">🧠 Model 思考</div><div class="txt">使用者問台北氣溫，我沒有即時資料，需要呼叫工具。</div></div>
-        <div class="step act"><div class="who">🧠 Model 輸出 tool_call</div><div class="txt">送出 JSON：<code>get_weather({"city":"台北"})</code>（注意：只是文字，還沒真的執行）</div></div>
-        <div class="step run"><div class="who">⚙️ Harness 執行</div><div class="txt">攔到 tool_call → 實際跑 Python 打氣象 API…</div></div>
-        <div class="step obs"><div class="who">⚙️ Harness 餵回結果</div><div class="txt"><code>{"temp":32,"desc":"晴"}</code> 塞回對話陣列，再呼叫一次模型。</div></div>
-        <div class="step answer"><div class="who">🧠 Model 最終回答</div><div class="txt">「台北現在大約 32°C，天氣晴，記得補水 ☀️」</div></div>
-      </div>
-    </div>
-
-    <div class="code">
-      <div class="bar"><span class="fn">agent.py — 幫模型裝上一個工具（真實可跑，節錄）</span><button class="copy" data-code="c2">複製</button></div>
-      <pre><code id="c2"><span class="cm"># harness 工作：用 JSON schema 描述「有哪些工具」</span>
-tools = [{
-    <span class="st">"type"</span>: <span class="st">"function"</span>,
-    <span class="st">"function"</span>: {
-        <span class="st">"name"</span>: <span class="st">"get_weather"</span>,
-        <span class="st">"description"</span>: <span class="st">"查詢某城市目前氣溫"</span>,
-        <span class="st">"parameters"</span>: {<span class="st">"type"</span>:<span class="st">"object"</span>,
-            <span class="st">"properties"</span>:{<span class="st">"city"</span>:{<span class="st">"type"</span>:<span class="st">"string"</span>}},
-            <span class="st">"required"</span>:[<span class="st">"city"</span>]},
-    },
-}]
-
-<span class="kw">def</span> get_weather(city):        <span class="cm"># ← 工具的「真身」寫在 harness 裡</span>
-    <span class="kw">return</span> {<span class="st">"temp"</span>: <span class="nm">32</span>, <span class="st">"desc"</span>: <span class="st">"晴"</span>}   <span class="cm"># 真實情況會去打氣象 API</span>
-
-messages = [{<span class="st">"role"</span>:<span class="st">"user"</span>,<span class="st">"content"</span>:<span class="st">"台北現在幾度？"</span>}]
-resp = client.chat.completions.create(
-    model=<span class="st">"gpt-4o-mini"</span>, messages=messages, tools=tools)
-
-msg = resp.choices[<span class="nm">0</span>].message
-<span class="kw">if</span> msg.tool_calls:                     <span class="cm"># 模型「決定」要用工具</span>
-    call = msg.tool_calls[<span class="nm">0</span>]
-    args = json.loads(call.function.arguments)
-    result = get_weather(**args)        <span class="cm"># harness「真的」執行</span>
-
-    <span class="cm"># 把結果餵回去，再問一次模型 → 這就是「迴圈」的一圈</span>
-    messages.append(msg)
-    messages.append({<span class="st">"role"</span>:<span class="st">"tool"</span>,
-        <span class="st">"tool_call_id"</span>:call.id,
-        <span class="st">"content"</span>:json.dumps(result)})
-    final = client.chat.completions.create(
-        model=<span class="st">"gpt-4o-mini"</span>, messages=messages)
-    print(final.choices[<span class="nm">0</span>].message.content)</code></pre>
-    </div>
-
-    <div class="navbtns"><button class="btn ghost" data-go="1">← 上一章</button><button class="btn" data-go="3">下一章：靈魂是迴圈 →</button></div>
-  </section>
-
-  <!-- ④ -->
-  <section class="chapter" data-title="④ 靈魂是迴圈">
-    <h2 class="title"><span class="chnum">4</span>Agent 的靈魂：迴圈（loop）</h2>
-    <p class="lede">很多人以為「有工具就是 Agent」。更準確地說：<b>Agent 是會自己一圈一圈跑到完成的東西。</b></p>
-
-    <div class="card">
-      <p>純聊天是「你問一句、它答一句」。Agent 不一樣——它會：<b>想 → 動手 → 看結果 → 再想 → 再動手…</b>直到任務完成。上一章的「工具」只是繞一圈；真正的 agent 會繞很多圈：查完天氣發現要換城市、算錯了自己重算、寫完程式跑測試沒過就修。</p>
-      <div class="loop" id="loopViz">
-        <div class="node" data-k="0">🧠 想<small>think</small></div>
-        <div class="arrow">→</div>
-        <div class="node" data-k="1">✋ 動手<small>act</small></div>
-        <div class="arrow">→</div>
-        <div class="node" data-k="2">👀 看結果<small>observe</small></div>
-        <div class="arrow">↩</div>
-        <div class="node" data-k="3">✅ 完成？<small>done?</small></div>
-      </div>
-      <div class="row" style="justify-content:center;margin-top:14px">
-        <button class="btn" id="loopRun">▶ 播放一圈</button>
-      </div>
-      <p class="muted" style="text-align:center;font-size:13px;margin-top:8px">沒完成就回到「想」，再繞一圈。這個 <b>while 迴圈</b>，就是 harness 的心臟。</p>
-    </div>
-
-    <div class="note">你正在用的 <b>Claude Code</b>、Cursor、各種「AI 幫我把事情做完」的工具，底層都是這個迴圈：模型提議一個動作 → harness 執行（讀檔、跑指令、改程式）→ 把結果貼回去 → 模型看了再決定下一步。</div>
-
-    <div class="navbtns"><button class="btn ghost" data-go="2">← 上一章</button><button class="btn" data-go="4">下一章：為何變顯學 →</button></div>
-  </section>
-
-  <!-- ⑤ -->
-  <section class="chapter" data-title="⑤ 為何最近變顯學">
-    <h2 class="title"><span class="chnum">5</span>為什麼 Harness 最近變「顯學」？</h2>
-    <p class="lede">你的直覺沒錯：模型單靠自己撞牆後，大家把心力放到「外面那層程式」，harness 才被推上檯面。</p>
-
-    <div class="card">
-      <p>過去 harness 只是個「跑腿的」——傳傳資料而已。現在大家發現：<b>直接叫模型硬答，效果常常不夠好</b>；但在外面那層加上一些技巧，同一個模型就能穩很多：</p>
-      <div class="tagrow">
-        <span class="tag h">脈絡管理（塞對的東西進 context）</span>
-        <span class="tag h">失敗重試 / 自我修正</span>
-        <span class="tag h">反思 reflection</span>
-        <span class="tag h">RAG 檢索增強</span>
-        <span class="tag h">子 agent 分工</span>
-      </div>
-    </div>
-
-    <div class="demo">
-      <div class="lbl">互動 · 同一個模型，兩種 harness</div>
-      <p style="margin:.2em 0 10px;font-size:14px" class="muted">任務：「幫我查我們 Q2 的退貨率，並說明為什麼變高」。切換看看兩種 harness 餵給<b>同一個模型</b>時，出來的東西差多少。</p>
-      <div class="toggle" id="cmpToggle">
-        <button data-c="bare" class="active">陽春 harness</button>
-        <button data-c="rich">精緻 harness</button>
-      </div>
-      <div class="flow" id="cmpFlow"></div>
-      <div class="outbox" id="cmpOut"></div>
-    </div>
-
-    <div class="callout"><b>別誤會：</b>「好 harness 能讓中階模型贏過高階模型」這句話講得太滿。更準的說法是——<b>同一個模型在不同 harness 下，表現天差地遠</b>；harness 的品質，有時和模型本身一樣重要。但硬要用陽春 harness 配弱模型去贏強模型，通常不成立。</div>
-
-    <div class="card">
-      <h3>那 LangChain、AutoGen、CrewAI 是什麼？</h3>
-      <p>它們是 <b>framework（框架）</b>——幫你「蓋 harness」的工具箱，不等於 harness 本身。你也可以完全不用框架，自己用 30 行寫一個 harness（很多正式產品就是這樣，為了可控）。</p>
-    </div>
-
-    <div class="navbtns"><button class="btn ghost" data-go="3">← 上一章</button><button class="btn" data-go="5">下一章：把話講精準 →</button></div>
-  </section>
-
-  <!-- ⑥ -->
-  <section class="chapter" data-title="⑥ 澄清 / 糾錯">
-    <h2 class="title"><span class="chnum">6</span>把話講精準（幾個常見的小誤會）</h2>
-    <p class="lede">你的整體脈絡是對的。這裡把幾句「聽起來對、但不夠精準」的說法校準一下。</p>
-
-    <table class="cmp">
-      <thead><tr><th style="min-width:120px">主題</th><th>常見/含糊的說法</th><th>更精準的說法</th></tr></thead>
-      <tbody>
-        <tr>
-          <td class="lab">名詞的年紀</td>
-          <td class="no">「早期那 30 行就叫 harness」</td>
-          <td class="yes">那層薄 wrapper 的<b>概念</b>早就有；但 harness 這個<b>詞</b>被廣泛使用，是近一兩年（2024–2025）在 agent／eval／coding agent 圈才流行。你「以前就有、最近才顯學」的直覺很準。</td>
-        </tr>
-        <tr>
-          <td class="lab">Agent 的定義</td>
-          <td class="no">「有工具＝Agent」</td>
-          <td class="yes">靈魂是<b>迴圈</b>：想→做→看→再想，反覆到完成。工具只是迴圈裡的一步。</td>
-        </tr>
-        <tr>
-          <td class="lab">Harness 的威力</td>
-          <td class="no">「中階模型靠 harness 就能贏高階模型」</td>
-          <td class="yes">太滿。準確版：同一模型在不同 harness 下差很多；harness 品質有時和模型一樣重要。</td>
-        </tr>
-        <tr>
-          <td class="lab">框架 vs harness</td>
-          <td class="no">「LangChain＝harness」</td>
-          <td class="yes">它們是 <b>framework</b>（幫你蓋 harness 的工具），不等於 harness 本身。</td>
-        </tr>
-        <tr>
-          <td class="lab">MCP 是什麼</td>
-          <td class="no">「MCP 是多 agent 協作架構」</td>
-          <td class="yes">MCP 是一個<b>連接工具/資料給模型的協定（protocol）</b>，像 USB 標準口，不是協作架構。</td>
-        </tr>
-        <tr>
-          <td class="lab">Multi-agent</td>
-          <td class="no">「多 agent 是 harness 的完全體」</td>
-          <td class="yes">它是一種<b>架構取捨</b>，常更脆弱、更難除錯，不代表更高級。單 agent 把迴圈做穩，往往更實用。</td>
-        </tr>
-        <tr>
-          <td class="lab">最吃重的活</td>
-          <td class="no">（常被忽略）</td>
-          <td class="yes">現代 harness 最花心思的其實是<b>脈絡管理</b>：context window 有限，每一輪要決定塞什麼、丟什麼、壓縮什麼。</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="note" style="margin-top:18px"><b>結論：</b>你的四段推論方向都對，<code>Agent = Model + Harness</code> 這個公式在今天的語境下站得住腳、也很有代表性。上面只是把幾個轉角磨得更精準而已。</div>
-
-    <div class="navbtns"><button class="btn ghost" data-go="4">← 上一章</button><button class="btn" data-go="6">最後：這頁怎麼做的 →</button></div>
-  </section>
-
-  <!-- ⑦ -->
-  <section class="chapter" data-title="⑦ 這頁怎麼做的">
-    <h2 class="title"><span class="chnum">7</span>這一頁是怎麼做出來的</h2>
-    <p class="lede">呼應參考頁的精神：把製作過程也攤開。這頁本身，就是一個「人給目標、AI 跑迴圈」的小例子。</p>
-
-    <div class="card">
-      <h3>1 · 用 Claude Code 的 Plan Mode 先規劃</h3>
-      <p>沒有一開始就寫 code。先讓 AI 讀參考頁 <a href="https://patrickruan.github.io/mnist-knob-lab/" target="_blank" rel="noopener">mnist-knob-lab</a> 抓風格、確認「互動程度」與「程式範例怎麼處理」兩個關鍵選擇，寫成一份計畫、經人核准後才動工。</p>
-    </div>
-    <div class="card">
-      <h3>2 · 單一自包含 HTML 的取捨</h3>
-      <p>整頁就一個 <code>index.html</code>，HTML／CSS／JS 全部 inline，<b>零外部相依</b>。好處：可離線打開、可直接丟上 GitHub Pages、不怕某個 CDN 掛掉。代價：檔案較長，但對教學頁很划算。</p>
-    </div>
-    <div class="card">
-      <h3>3 · 為什麼用「前端模擬」而不是真的連 OpenAI</h3>
-      <p>頁面上的三個互動（<code>messages</code> 堆疊、Agent 步進器、harness 對比）都是純前端演的。因為：<b>不該把 API 金鑰放進公開網頁</b>，而且教學重點是「看懂流程」，模擬就夠。真正可跑的程式碼另外附在 ② ③ 章，讓你複製回自己電腦、填上自己的金鑰去跑。</p>
-    </div>
-    <div class="card">
-      <h3>4 · 內容的事實把關</h3>
-      <p>製作時不是照單全收原始說法，而是把「常見但不精準」的幾句話挑出來校準（就是第 ⑥ 章那張表）。AI 生成很方便，但脈絡與名詞的精準度需要人＋模型一起把關。</p>
-    </div>
-    <div class="card">
-      <h3>5 · 想自己發佈？</h3>
-      <p>把這個 <code>index.html</code> 推到一個 GitHub repo、開啟 Pages，就有一條像參考頁那樣的公開網址了。要改內容，直接編輯這一個檔案即可。</p>
-    </div>
-
-    <div class="note">整個過程本身就是第 ④ 章那個迴圈的縮影：<b>人定目標 → AI 提方案 → 在瀏覽器裡驗證 → 修正 → 再一圈</b>。差別只在，這次迴圈裡「動手」的是在寫這頁的 harness。</div>
-
-    <div class="navbtns"><button class="btn ghost" data-go="5">← 上一章</button><button class="btn ghost" data-go="0">回到開頭 ↑</button></div>
-  </section>
-
-</div>
-</main>
+</div></main>
 
 <footer>
-  一頁教學 · <b>Agent = Model + Harness</b> · 純靜態、可離線、可自行部署到 GitHub Pages<br>
-  <span style="opacity:.7">互動皆為前端模擬；真實 API 程式碼請見第 ② ③ 章。</span>
+  AI Agent 白話課 · 純靜態教材，可自由取用與修改<br>
+  <span style="opacity:.75">所有互動皆為前端模擬，不會連網。</span>
 </footer>
 
-<script>
-(function(){
-  "use strict";
-
-  // ---------- tab nav ----------
-  var chapters = Array.prototype.slice.call(document.querySelectorAll('.chapter'));
-  var tabbar = document.getElementById('tabbar');
-  chapters.forEach(function(ch, i){
-    var b = document.createElement('button');
-    b.textContent = ch.getAttribute('data-title');
-    if(i===0) b.className='active';
-    b.addEventListener('click', function(){ go(i); });
-    tabbar.appendChild(b);
-  });
-  var tabBtns = Array.prototype.slice.call(tabbar.children);
-
-  function go(i){
-    chapters.forEach(function(c,k){ c.classList.toggle('active', k===i); });
-    tabBtns.forEach(function(b,k){ b.classList.toggle('active', k===i); });
-    var active = tabBtns[i];
-    if(active && active.scrollIntoView) active.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
-  document.body.addEventListener('click', function(e){
-    var t = e.target.closest('[data-go]');
-    if(t){ go(parseInt(t.getAttribute('data-go'),10)); }
-  });
-
-  // ---------- copy buttons ----------
-  Array.prototype.forEach.call(document.querySelectorAll('.copy'), function(btn){
-    btn.addEventListener('click', function(){
-      var el = document.getElementById(btn.getAttribute('data-code'));
-      var text = el ? el.innerText : '';
-      var done = function(){ var o=btn.textContent; btn.textContent='已複製 ✓'; setTimeout(function(){btn.textContent=o;},1400); };
-      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, done); }
-      else {
-        var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
-        try{document.execCommand('copy');}catch(_){}
-        document.body.removeChild(ta); done();
-      }
-    });
-  });
-
-  // ---------- ② messages array demo (built with DOM methods, no innerHTML) ----------
-  var chatMsgs = document.getElementById('chatMsgs');
-  var chatInput = document.getElementById('chatInput');
-  var chatCount = document.getElementById('chatCount');
-  var fakeReplies = [
-    "好的！這是三個點子：① 河濱騎腳踏車 ② 逛獨立書店 ③ 在家做手沖咖啡。",
-    "沒問題，我幫你整理成一份清單，並排出優先順序。",
-    "了解，我把重點抓出來給你：這是最關鍵的三件事。",
-    "收到～我先分成「必做」和「加分」兩類來規劃。"
-  ];
-  var replyIdx = 0;
-  var roleLabels = {system:'system（角色設定）',user:'user（你）',assistant:'assistant（AI）',tool:'tool（工具結果）'};
-
-  function addMsg(role, content){
-    var wrap = document.createElement('div');
-    wrap.className = 'msg ' + role;
-
-    var roleEl = document.createElement('div');
-    roleEl.className = 'role';
-    roleEl.textContent = roleLabels[role] || role;
-
-    var bodyEl = document.createElement('div');
-    bodyEl.className = 'body';
-    bodyEl.textContent = content; // textContent only — never HTML, safe by construction
-
-    wrap.appendChild(roleEl);
-    wrap.appendChild(bodyEl);
-    chatMsgs.appendChild(wrap);
-  }
-  function seedChat(){
-    while(chatMsgs.firstChild) chatMsgs.removeChild(chatMsgs.firstChild);
-    addMsg('system','你是一個友善、簡潔的中文助理。');
-    updateCount();
-  }
-  function updateCount(){
-    var n = chatMsgs.children.length;
-    chatCount.textContent = 'messages 陣列目前有 '+n+' 則。每次送出，harness 會把「整串」再寄給模型一次——這就是它「記得」對話的唯一原因。';
-  }
-  function sendChat(){
-    var v=(chatInput.value||'').trim();
-    if(!v) return;
-    addMsg('user', v);
-    var r = fakeReplies[replyIdx % fakeReplies.length]; replyIdx++;
-    addMsg('assistant', r);
-    chatInput.value='';
-    updateCount();
-    chatMsgs.lastChild.scrollIntoView({block:'nearest',behavior:'smooth'});
-  }
-  document.getElementById('chatSend').addEventListener('click', sendChat);
-  document.getElementById('chatReset').addEventListener('click', function(){ replyIdx=0; seedChat(); });
-  chatInput.addEventListener('keydown', function(e){ if(e.key==='Enter') sendChat(); });
-  seedChat();
-
-  // ---------- ③ agent step demo ----------
-  var stepEls = Array.prototype.slice.call(document.querySelectorAll('#stepBox .step'));
-  var stepI = 0;
-  var stepNext = document.getElementById('stepNext');
-  function renderSteps(){
-    stepEls.forEach(function(el,k){ el.classList.toggle('on', k<stepI); });
-    stepNext.disabled = stepI>=stepEls.length;
-    stepNext.textContent = stepI>=stepEls.length ? '完成 ✓' : '下一步 ▸';
-  }
-  stepNext.addEventListener('click', function(){ if(stepI<stepEls.length){ stepI++; renderSteps();
-    var cur=stepEls[stepI-1]; if(cur) cur.scrollIntoView({block:'nearest',behavior:'smooth'}); } });
-  document.getElementById('stepReset').addEventListener('click', function(){ stepI=0; renderSteps(); });
-  renderSteps();
-
-  // ---------- ④ loop animation ----------
-  var loopNodes = Array.prototype.slice.call(document.querySelectorAll('#loopViz .node'));
-  var loopBtn = document.getElementById('loopRun');
-  var loopTimer=null;
-  loopBtn.addEventListener('click', function(){
-    if(loopTimer) return;
-    var i=0; loopBtn.disabled=true;
-    function tick(){
-      loopNodes.forEach(function(n,k){ n.classList.toggle('on', k===i); });
-      i++;
-      if(i<=loopNodes.length){ loopTimer=setTimeout(tick, 650); }
-      else { loopTimer=setTimeout(function(){ loopNodes.forEach(function(n){n.classList.remove('on');}); loopBtn.disabled=false; loopTimer=null; }, 500); }
-    }
-    tick();
-  });
-
-  // ---------- ⑤ harness comparison (DOM built, static developer-authored copy) ----------
-  var cmpFlow = document.getElementById('cmpFlow');
-  var cmpOut = document.getElementById('cmpOut');
-  var cmpToggle = document.getElementById('cmpToggle');
-
-  function makeP(boldPrefix, rest, colorVar){
-    var p = document.createElement('p');
-    if(boldPrefix){
-      var b = document.createElement('b');
-      b.textContent = boldPrefix;
-      p.appendChild(b);
-    }
-    var span = document.createElement('span');
-    span.textContent = rest;
-    if(colorVar) span.style.color = colorVar;
-    p.appendChild(span);
-    return p;
-  }
-  function makeMuted(text){
-    var p = document.createElement('p');
-    p.className='muted';
-    p.textContent = text;
-    return p;
-  }
-
-  var cmpData = {
-    bare: {
-      flow: '流程：messages = [問題] → 模型',
-      build: function(container){
-        container.appendChild(makeP('模型只能用它訓練時的舊知識硬猜：', ''));
-        container.appendChild(makeP('', '「退貨率上升通常和產品品質、物流、或季節性因素有關，建議你檢視相關數據……」', 'var(--warn)'));
-        container.appendChild(makeMuted('👉 空泛、沒碰到你真正的數字，因為 harness 沒餵給它任何內部資料，也沒讓它動手查。'));
-      }
-    },
-    rich: {
-      flow: '流程：問題 → 檢索(RAG)內部報表 → 呼叫 query_db 工具 → 反思檢查 → 模型彙整',
-      build: function(container){
-        container.appendChild(makeP('Harness 先幫模型把資料備齊、給了工具、跑了幾圈：', ''));
-        container.appendChild(makeP('', '「Q2 退貨率 8.3%（Q1 為 5.1%）。拆解後主因：型號 A-200 佔退貨 61%，集中在 5/12 之後出貨批次，退貨理由多為『螢幕亮點』。建議優先檢查該批供應商品質。」', 'var(--harness)'));
-        container.appendChild(makeMuted('👉 具體、可行動。同一個模型，差別全在外面那層 harness。'));
-      }
-    }
-  };
-  function renderCmp(key){
-    cmpFlow.textContent = cmpData[key].flow;
-    while(cmpOut.firstChild) cmpOut.removeChild(cmpOut.firstChild);
-    cmpData[key].build(cmpOut);
-    Array.prototype.forEach.call(cmpToggle.children, function(b){ b.classList.toggle('active', b.getAttribute('data-c')===key); });
-  }
-  cmpToggle.addEventListener('click', function(e){
-    var b=e.target.closest('button'); if(!b) return; renderCmp(b.getAttribute('data-c'));
-  });
-  renderCmp('bare');
-
-})();
-</script>
+<script src="assets/app.js"></script>
 </body>
 </html>

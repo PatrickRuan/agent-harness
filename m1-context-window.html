@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M1 · 那個箱子：模型其實沒有記憶</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="sitebar"><div class="inner">
+  <a class="home" href="index.html">🏠 課程地圖</a>
+  <a href="m1-context-window.html">M1 箱子</a>
+  <a href="m2-four-eras.html">M2 四代工程學</a>
+  <a href="m3-agent-harness.html">M3 Agent</a>
+  <a href="m4-toolbox.html">M4 零件箱</a>
+  <a href="m5-products.html">M5 產品</a>
+  <a href="m6-safety.html">M6 安全</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">Module 1 · 全課的地基</div>
+  <h1>那個箱子<br>模型其實沒有記憶</h1>
+  <p>這一課只講一件事。但這件事撐起後面所有的課——包括那些聽起來很潮的新名詞。</p>
+</div></header>
+
+<main><div class="wrap">
+
+  <h2 class="title"><span class="chnum">1</span>先講一個違反直覺的事實</h2>
+  <p class="lede">你跟 ChatGPT 聊了半小時，它好像記得你剛剛說過什麼。這是幻覺。</p>
+
+  <div class="card">
+    <p>大型語言模型（LLM）本身<b>沒有任何記憶</b>。它不會「記住」你上一句話，就像計算機不會記得你上一次按了什麼。</p>
+    <p>每一次呼叫模型，對它來說都是<b>人生第一次</b>。它看到一堆文字，然後預測接下來最合理的文字是什麼。如此而已。</p>
+    <div class="callout"><b>那它為什麼看起來記得？</b>因為外面那支程式，<b>每一輪都把整段對話重新寄一次給它</b>。你以為它記得，其實是有人每次都把前情提要重講一遍給一個失憶的人聽。</div>
+  </div>
+
+  <figure class="fig">
+    <svg viewBox="0 0 640 210" role="img" aria-label="每一輪都把整段對話重新寄給模型的示意圖">
+      <defs>
+        <marker id="ar1" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" fill="var(--muted)"/>
+        </marker>
+      </defs>
+      <text x="18" y="24" font-size="13" font-weight="700" fill="var(--ink)">第 1 輪</text>
+      <rect x="18" y="34" width="150" height="34" rx="7" fill="var(--brand-soft)" stroke="var(--brand)"/>
+      <text x="93" y="56" font-size="12" text-anchor="middle" fill="var(--brand)">你好</text>
+      <line x1="176" y1="51" x2="228" y2="51" stroke="var(--muted)" stroke-width="1.6" marker-end="url(#ar1)"/>
+      <rect x="236" y="30" width="86" height="42" rx="9" fill="var(--model-soft)" stroke="var(--model)"/>
+      <text x="279" y="56" font-size="12.5" font-weight="700" text-anchor="middle" fill="var(--model)">模型</text>
+
+      <text x="18" y="104" font-size="13" font-weight="700" fill="var(--ink)">第 2 輪</text>
+      <rect x="18" y="114" width="150" height="34" rx="7" fill="var(--brand-soft)" stroke="var(--brand)"/>
+      <text x="93" y="130" font-size="10.5" text-anchor="middle" fill="var(--brand)">你好 ＋ AI回覆</text>
+      <text x="93" y="143" font-size="10.5" text-anchor="middle" fill="var(--brand)">＋ 新問題</text>
+      <line x1="176" y1="131" x2="228" y2="131" stroke="var(--muted)" stroke-width="1.6" marker-end="url(#ar1)"/>
+      <rect x="236" y="110" width="86" height="42" rx="9" fill="var(--model-soft)" stroke="var(--model)"/>
+      <text x="279" y="136" font-size="12.5" font-weight="700" text-anchor="middle" fill="var(--model)">模型</text>
+
+      <text x="18" y="184" font-size="13" font-weight="700" fill="var(--ink)">第 3 輪</text>
+      <rect x="18" y="194" width="150" height="10" rx="5" fill="var(--brand-soft)" stroke="var(--brand)"/>
+      <text x="360" y="196" font-size="11.5" fill="var(--muted)">⋯ 每一輪都變長</text>
+
+      <text x="360" y="60" font-size="12.5" fill="var(--muted)">模型是無狀態的</text>
+      <text x="360" y="80" font-size="12.5" fill="var(--muted)">（stateless）</text>
+      <text x="360" y="132" font-size="12.5" fill="var(--muted)">整段重寄，它才「記得」</text>
+    </svg>
+    <figcaption>模型每次都從零開始讀。所謂的「記憶」，是外面的程式每輪把歷史重寄一次。</figcaption>
+  </figure>
+
+  <h2 class="title"><span class="chnum">2</span>那個箱子有多大？</h2>
+  <p class="lede">既然每輪都要把全部重寄，就有一個殘酷的物理限制：一次能寄多少？</p>
+
+  <div class="card">
+    <p>模型一次能讀進去的文字量是<b>有上限</b>的。這個上限叫做<b>脈絡視窗（context window）</b>，單位是 token（你可以粗略想成「字」，中文大約 1 個字 ≈ 1～2 個 token）。</p>
+    <p>這個箱子放得下多少，就決定了模型「當下能同時看到多少東西」。超過的部分，它<b>看不到</b>——不是忘記，是根本沒進去。</p>
+  </div>
+
+  <div class="note">
+    <b>給電機系的類比：</b>Karpathy（前 Tesla AI 總監）自己的比喻是——<b>模型是 CPU，脈絡視窗是 RAM</b>。
+    CPU 再強，能算的也只有「這一刻載進 RAM 裡的東西」。硬碟裡的資料再多，沒載進來就等於不存在。
+    後面整門課，其實都在講同一件事：<b>誰、在什麼時候、決定把什麼載進這塊 RAM</b>。
+  </div>
+
+  <figure class="fig">
+    <svg viewBox="0 0 620 175" role="img" aria-label="CPU 與 RAM 的類比圖">
+      <rect x="30" y="45" width="120" height="80" rx="10" fill="var(--model-soft)" stroke="var(--model)" stroke-width="2"/>
+      <text x="90" y="80" font-size="14" font-weight="800" text-anchor="middle" fill="var(--model)">模型</text>
+      <text x="90" y="100" font-size="11.5" text-anchor="middle" fill="var(--muted)">＝ CPU</text>
+
+      <line x1="152" y1="85" x2="218" y2="85" stroke="var(--muted)" stroke-width="1.6"/>
+      <line x1="152" y1="78" x2="218" y2="78" stroke="var(--muted)" stroke-width="1.6"/>
+      <line x1="152" y1="92" x2="218" y2="92" stroke="var(--muted)" stroke-width="1.6"/>
+
+      <rect x="220" y="30" width="150" height="110" rx="10" fill="var(--brand-soft)" stroke="var(--brand)" stroke-width="2"/>
+      <text x="295" y="55" font-size="13.5" font-weight="800" text-anchor="middle" fill="var(--brand)">脈絡視窗</text>
+      <text x="295" y="73" font-size="11.5" text-anchor="middle" fill="var(--muted)">＝ RAM（有限！）</text>
+      <rect x="234" y="84" width="122" height="12" rx="3" fill="var(--brand)" opacity=".75"/>
+      <rect x="234" y="100" width="122" height="12" rx="3" fill="var(--harness)" opacity=".75"/>
+      <rect x="234" y="116" width="70" height="12" rx="3" fill="var(--warn)" opacity=".75"/>
+
+      <rect x="424" y="45" width="160" height="80" rx="10" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 4"/>
+      <text x="504" y="76" font-size="12.5" font-weight="700" text-anchor="middle" fill="var(--muted)">外面的世界</text>
+      <text x="504" y="95" font-size="11" text-anchor="middle" fill="var(--muted)">檔案、網頁、資料庫</text>
+      <text x="504" y="111" font-size="11" text-anchor="middle" fill="var(--muted)">（沒載進來＝不存在）</text>
+      <defs>
+        <marker id="ar2" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" fill="var(--muted)"/>
+        </marker>
+      </defs>
+      <line x1="420" y1="85" x2="376" y2="85" stroke="var(--muted)" stroke-width="1.6" marker-end="url(#ar2)"/>
+    </svg>
+    <figcaption>模型是 CPU，脈絡視窗是 RAM。整門課都在討論：誰決定往這塊 RAM 裡放什麼。</figcaption>
+  </figure>
+
+  <h2 class="title"><span class="chnum">3</span>親手把箱子塞爆</h2>
+  <p class="lede">這是全課最重要的一個直覺。與其聽我講，不如你自己塞塞看。</p>
+
+  <div class="demo">
+    <div class="lbl">互動 · 脈絡視窗填充器</div>
+    <p class="hint">假設這個模型的箱子是 200,000 tokens。按下面的按鈕做各種事，看箱子怎麼被吃掉。</p>
+    <div class="row">
+      <button class="btn" data-add="ask">問一個問題</button>
+      <button class="btn" data-add="file">請它讀一個檔案</button>
+      <button class="btn" data-add="folder">請它讀整個資料夾</button>
+      <button class="btn ghost" id="ctxReset">清空</button>
+    </div>
+
+    <div class="ctxwin" id="ctxWin">
+      <div class="capbar"><span id="ctxUsed">已用 8,000</span><span>上限 200,000 tokens</span></div>
+      <div class="ctxtrack" id="ctxTrack"></div>
+    </div>
+    <div id="ctxMsg" class="hint" style="margin-bottom:0"></div>
+  </div>
+
+  <div class="card">
+    <h3>箱子滿了會怎樣？</h3>
+    <p>不會有酷炫的爆炸。會發生的是三件很煩的事：</p>
+    <ul>
+      <li><b>直接被拒絕</b> — 請求太長，模型根本不收。</li>
+      <li><b>前面的被丟掉</b> — 為了塞下新的，只好把最早的對話砍掉，於是它「忘了」你一開始的要求。</li>
+      <li><b>被壓縮（compaction）</b> — 程式把前面的對話濃縮成一段摘要再繼續。摘要一定會失真，細節就掉了。</li>
+    </ul>
+    <p class="muted">你如果用過 AI 寫程式工具，聊久了它開始鬼打牆、忘記你三十分鐘前訂的規則——十之八九就是這個箱子在作怪。</p>
+  </div>
+
+  <h2 class="title"><span class="chnum">4</span>為什麼這是全課的地基</h2>
+
+  <div class="card">
+    <p>接下來幾課會出現一堆名詞：context engineering、harness、sub-agent、MCP、Skills、multi-agent……乍看很多，其實<b>全部都是同一個問題的不同解法</b>：</p>
+    <div class="tablewrap">
+      <table class="cmp">
+        <thead><tr><th style="min-width:150px">名詞</th><th>翻成「箱子」的話就是……</th></tr></thead>
+        <tbody>
+          <tr><td class="lab">Prompt engineering</td><td>把箱子裡的<b>字寫好</b></td></tr>
+          <tr><td class="lab">Context engineering</td><td>決定箱子裡<b>該放什麼</b></td></tr>
+          <tr><td class="lab">Harness</td><td>負責<b>裝箱、並反覆呼叫模型</b>的那支程式</td></tr>
+          <tr><td class="lab">Loop engineering</td><td>箱子每輪都要重裝，<b>設計這個循環</b></td></tr>
+          <tr><td class="lab">Sub-agent（子代理）</td><td>另外開<b>第二個箱子</b>，別把主箱子弄髒</td></tr>
+          <tr><td class="lab">MCP</td><td>往箱子裡<b>插工具的標準插頭</b></td></tr>
+          <tr><td class="lab">Skills</td><td>說明書<b>需要時才載入</b>箱子，不用時不佔空間</td></tr>
+          <tr><td class="lab">RAG（檢索增強）</td><td>去外面<b>撈對的資料</b>放進箱子</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>所以如果你這一課只帶走一句話，帶走這句：</p>
+  </div>
+
+  <div class="note" style="font-size:16px;text-align:center">
+    <b>模型沒有記憶，而它的視野是一個有限的箱子。<br>
+    剩下的一切，都是在解決「誰把什麼放進這個箱子」。</b>
+  </div>
+
+  <div class="pagenav">
+    <a href="index.html">← 回課程地圖</a>
+    <a class="next" href="m2-four-eras.html">M2 · 四代工程學 →</a>
+  </div>
+
+</div></main>
+
+<footer>
+  AI Agent 白話課 · M1 脈絡視窗 · <a href="index.html">回課程地圖</a>
+</footer>
+
+<script src="assets/app.js"></script>
+<script>
+(function(){
+  "use strict";
+  var CAP = 200000;
+  var BASE = 8000; // 系統提示 + 工具定義，一開始就佔掉
+  var KINDS = {
+    ask:    { label:"問答",   cls:"user", cost:500,   reply:1500 },
+    file:   { label:"檔案",   cls:"file", cost:15000, reply:1200 },
+    folder: { label:"資料夾", cls:"file", cost:60000, reply:1500 }
+  };
+
+  var segs = [{cls:"sys", label:"系統提示＋工具定義", cost:BASE}];
+  var track = document.getElementById('ctxTrack');
+  var usedEl = document.getElementById('ctxUsed');
+  var msgEl  = document.getElementById('ctxMsg');
+  var winEl  = document.getElementById('ctxWin');
+
+  function total(){
+    return segs.reduce(function(s,x){ return s + x.cost; }, 0);
+  }
+
+  function render(){
+    Lab.clear(track);
+    var used = total();
+    var over = used > CAP;
+
+    segs.forEach(function(s){
+      var d = Lab.el('div', 'ctxseg ' + s.cls);
+      // 高度依比例；超出時以 CAP 為分母仍會溢出，靠 overflow:hidden 裁掉，視覺上就是「滿出來」
+      var pct = (s.cost / CAP) * 100;
+      d.style.height = pct + '%';
+      if (pct > 7) d.textContent = s.label;
+      d.title = s.label + '：' + s.cost.toLocaleString() + ' tokens';
+      track.appendChild(d);
+    });
+
+    usedEl.textContent = '已用 ' + used.toLocaleString() +
+      '（' + Math.round(used / CAP * 100) + '%）';
+    winEl.classList.toggle('over', over);
+
+    Lab.clear(msgEl);
+    if (over) {
+      msgEl.appendChild(Lab.el('div', 'overflag',
+        '💥 爆了：超出上限 ' + (used - CAP).toLocaleString() + ' tokens'));
+      var d = Lab.el('div', null,
+        '接下來只有三條路：請求被拒絕、把最早的對話砍掉、或壓縮成摘要（會失真）。');
+      d.style.marginTop = '4px';
+      msgEl.appendChild(d);
+    } else if (used > CAP * 0.75) {
+      msgEl.appendChild(Lab.el('div', null, '⚠️ 已經用掉四分之三了。再讀幾個檔案就滿了。'));
+    } else {
+      msgEl.appendChild(Lab.el('div', null, '注意：光是「系統提示＋工具定義」就先吃掉了 8,000，你還沒開口它就不是空的。'));
+    }
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-add]'), function(btn){
+    btn.addEventListener('click', function(){
+      var k = KINDS[btn.getAttribute('data-add')];
+      segs.push({cls:'user', label:'你的要求', cost:k.cost});
+      segs.push({cls:'ai',   label:'AI 回覆',  cost:k.reply});
+      render();
+    });
+  });
+
+  document.getElementById('ctxReset').addEventListener('click', function(){
+    segs = [{cls:"sys", label:"系統提示＋工具定義", cost:BASE}];
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M2 · 四代工程學：從 prompt 到 loop</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="sitebar"><div class="inner">
+  <a class="home" href="index.html">🏠 課程地圖</a>
+  <a href="m1-context-window.html">M1 箱子</a>
+  <a href="m2-four-eras.html">M2 四代工程學</a>
+  <a href="m3-agent-harness.html">M3 Agent</a>
+  <a href="m4-toolbox.html">M4 零件箱</a>
+  <a href="m5-products.html">M5 產品</a>
+  <a href="m6-safety.html">M6 安全</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">Module 2 · 名詞的歷史</div>
+  <h1>四代工程學<br>從 prompt 到 loop</h1>
+  <p>六年之間，「怎麼把 AI 用好」這件事換了四個名字。每一次改名，都代表大家發現上一代不夠用了。</p>
+</div></header>
+
+<main><div class="wrap">
+
+  <h2 class="title"><span class="chnum">1</span>先看整條線</h2>
+  <p class="lede">拖拉下面的滑桿，看每個年代的人在煩惱什麼。</p>
+
+  <div class="demo">
+    <div class="lbl">互動 · 時間軸</div>
+    <p class="hint">拉一下，看重點怎麼從「字」一路移到「迴圈」。</p>
+
+    <div class="loop" id="eraNodes" style="margin-bottom:14px">
+      <div class="node" data-k="0">Prompt<small>2020–2023</small></div>
+      <div class="arrow">→</div>
+      <div class="node" data-k="1">Context<small>2025.6</small></div>
+      <div class="arrow">→</div>
+      <div class="node" data-k="2">Harness<small>2026 上半</small></div>
+      <div class="arrow">→</div>
+      <div class="node" data-k="3">Loop<small>2026.6</small></div>
+    </div>
+
+    <input type="range" id="eraSlider" min="0" max="3" step="1" value="0"
+           style="width:100%;margin:4px 0 14px" aria-label="選擇年代">
+
+    <div class="outbox" id="eraOut"></div>
+  </div>
+
+  <h2 class="title"><span class="chnum">2</span>一代一代講</h2>
+
+  <div class="card">
+    <h3>① Prompt engineering（提示工程）· 2020–2023</h3>
+    <p><b>在煩惱什麼：</b>怎麼「講話」模型才聽得懂。</p>
+    <p>那個年代模型比較笨，很吃你怎麼問。於是出現一堆技巧：叫它「一步一步想」、給它幾個範例、叫它「假裝你是一位資深律師」。當時真的有人靠這個吃飯，職稱就叫 prompt engineer。</p>
+    <p class="muted">用箱子來說：<b>把箱子裡的字寫好。</b></p>
+  </div>
+
+  <div class="card">
+    <h3>② Context engineering（脈絡工程）· 2025 年 6 月</h3>
+    <p><b>在煩惱什麼：</b>模型變聰明了，問題不在怎麼問，而在<b>它到底看得到什麼</b>。</p>
+    <p>大家發現，同一個問題，給不給它相關文件、給不給它對話歷史、給不給它工具說明，結果天差地遠。重點從「那句話怎麼寫」變成「這一輪要把哪些東西塞進箱子」。</p>
+    <p><b>來源很明確：</b>2025 年 6 月，Shopify 執行長 Tobi Lütke 說他更喜歡「context engineering」這個說法；六天後 Andrej Karpathy 附和並定義為「<i>把脈絡視窗填入剛好正確的資訊的微妙藝術與科學</i>」，這個詞就紅了。</p>
+    <p class="muted">用箱子來說：<b>決定箱子裡該放什麼。</b></p>
+  </div>
+
+  <div class="card">
+    <h3>③ Harness engineering · 2026 年上半</h3>
+    <p><b>在煩惱什麼：</b>光決定「放什麼」不夠了，因為 AI 現在要連續工作好幾個小時。</p>
+    <p>當 AI 不只回答一句，而是要跑幾百輪、開檔案、跑測試、修錯誤，你需要的就不只是一份好脈絡，而是一整套<b>圍繞模型的基礎建設</b>：權限控制、錯誤重試、跨工作階段的記憶、成本上限。這一整套就叫 harness（字面意思是「馬具」——套在馬身上讓你能駕馭牠的那組裝備）。</p>
+    <p class="muted">用箱子來說：<b>那支負責裝箱、並反覆呼叫模型的程式。</b></p>
+  </div>
+
+  <div class="card">
+    <h3>④ Loop engineering（迴圈工程）· 2026 年 6 月</h3>
+    <p><b>在煩惱什麼：</b>agent 會自己跑很多圈，但它<b>跑得對不對、什麼時候該停</b>，沒人管。</p>
+    <p>核心洞察是：與其一直想辦法「把提示詞寫得更好」，不如去設計那個<b>驅動 agent 的循環本身</b>——目標怎麼定、每一圈怎麼驗證、失敗怎麼回頭、什麼條件才算完成、燒多少錢就該喊停。</p>
+    <p>Peter Steinberger 把它壓縮成一句話：<b>別再對你的 agent 下提示了，去設計那個對它下提示的迴圈。</b></p>
+    <p class="muted">用箱子來說：<b>箱子每輪都要重裝，設計這個循環。</b></p>
+  </div>
+
+  <div class="callout">
+    <b>老實說：後兩個詞很新。</b>「Context engineering」已經站穩了。但「harness engineering」大約 2026 上半才出現，「loop engineering」是 2026 年 6 月才被命名的——寫這頁的時候它只有一個多月大。
+    它們指的現象是真的、也重要，但<b>名字還在定型中</b>，未必會留下來。學觀念，不要背名詞。
+  </div>
+
+  <h2 class="title"><span class="chnum">3</span>看出那條規律了嗎？</h2>
+
+  <div class="card">
+    <p>四代其實是同一個方向在推進：<b>人類操心的層級，一路往外擴。</b></p>
+    <div class="tablewrap">
+      <table class="cmp">
+        <thead><tr><th>世代</th><th>你在調整的東西</th><th>範圍</th></tr></thead>
+        <tbody>
+          <tr><td class="lab">Prompt</td><td>那一句話</td><td>一次呼叫裡的<b>文字</b></td></tr>
+          <tr><td class="lab">Context</td><td>那一次要給它看的全部資料</td><td>一次呼叫的<b>整個箱子</b></td></tr>
+          <tr><td class="lab">Harness</td><td>包在模型外面的整套程式</td><td>很多次呼叫的<b>基礎建設</b></td></tr>
+          <tr><td class="lab">Loop</td><td>驅動它反覆做事的那個循環</td><td>整個<b>任務的生命週期</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">換句話說，模型越強，人類的工作就越往「架構」和「監督」移動，越不在「措辭」上。這也是為什麼「prompt engineer 是未來熱門職業」這個 2023 年的預測，現在看起來有點好笑。</p>
+  </div>
+
+  <div class="note">
+    <b>給電機系的類比：</b>這條演進線很像從「調一顆電阻」→「設計整塊電路」→「設計電源、散熱、保護機制」→「設計整個回授控制系統」。
+    元件本身變好了，工程師的價值就往<b>系統層級</b>移動。AI 這幾年走的是一模一樣的路。
+  </div>
+
+  <div class="pagenav">
+    <a href="m1-context-window.html">← M1 箱子</a>
+    <a class="next" href="m3-agent-harness.html">M3 · Agent = Model + Harness →</a>
+  </div>
+
+</div></main>
+
+<footer>
+  AI Agent 白話課 · M2 四代工程學 · <a href="index.html">回課程地圖</a>
+</footer>
+
+<script src="assets/app.js"></script>
+<script>
+(function(){
+  "use strict";
+  var ERAS = [
+    { name:"Prompt engineering（提示工程）", when:"2020–2023",
+      worry:"怎麼「講話」模型才聽得懂？",
+      doing:"設計那一句話：叫它一步步想、給幾個範例、給它一個身分。",
+      box:"把箱子裡的字寫好。",
+      who:"GPT-3 / ChatGPT 剛問世的年代，一度真的有人職稱叫 prompt engineer。" },
+    { name:"Context engineering（脈絡工程）", when:"2025 年 6 月",
+      worry:"模型不笨了，問題是它到底「看得到」什麼？",
+      doing:"決定每一輪要把哪些資料、歷史、工具說明塞進脈絡視窗。",
+      box:"決定箱子裡該放什麼。",
+      who:"Tobi Lütke（Shopify 執行長）提出，六天後 Andrej Karpathy 附和而流行。" },
+    { name:"Harness engineering", when:"2026 年上半",
+      worry:"AI 要連續工作好幾小時，誰來管權限、重試、記憶、成本？",
+      doing:"打造圍繞模型的整套基礎建設，讓它能長時間可靠地做事。",
+      box:"那支負責裝箱、並反覆呼叫模型的程式。",
+      who:"隨著 coding agent 成熟而浮現，Anthropic 的 harness 設計文章帶動了討論。" },
+    { name:"Loop engineering（迴圈工程）", when:"2026 年 6 月",
+      worry:"agent 自己跑很多圈，但跑得對不對、何時該停？",
+      doing:"設計那個驅動循環：目標、每圈的驗證、失敗回頭、完成條件、成本煞車。",
+      box:"箱子每輪都要重裝，設計這個循環。",
+      who:"Addy Osmani 的文章帶起，Peter Steinberger 一句話總結：別再提示你的 agent，去設計那個提示它的迴圈。" }
+  ];
+
+  var slider = document.getElementById('eraSlider');
+  var out = document.getElementById('eraOut');
+  var nodes = Array.prototype.slice.call(document.querySelectorAll('#eraNodes .node'));
+
+  function line(label, text, strong){
+    var p = document.createElement('p');
+    var b = document.createElement('b');
+    b.textContent = label + '：';
+    p.appendChild(b);
+    var s = document.createElement('span');
+    s.textContent = text;
+    if (strong) s.style.color = 'var(--brand)';
+    p.appendChild(s);
+    return p;
+  }
+
+  function render(i){
+    var e = ERAS[i];
+    Lab.clear(out);
+
+    var h = Lab.el('h3', null, e.name);
+    h.style.margin = '0 0 .1em';
+    h.style.fontSize = '17px';
+    out.appendChild(h);
+
+    var w = Lab.el('div', 'muted', e.when);
+    w.style.fontSize = '13px';
+    w.style.marginBottom = '10px';
+    out.appendChild(w);
+
+    out.appendChild(line('在煩惱什麼', e.worry));
+    out.appendChild(line('實際在做', e.doing));
+    out.appendChild(line('用箱子來說', e.box, true));
+    out.appendChild(line('怎麼來的', e.who));
+
+    nodes.forEach(function(n, k){ n.classList.toggle('on', k === i); });
+  }
+
+  slider.addEventListener('input', function(){ render(parseInt(slider.value, 10)); });
+  nodes.forEach(function(n, k){
+    n.style.cursor = 'pointer';
+    n.addEventListener('click', function(){ slider.value = k; render(k); });
+  });
+
+  render(0);
+})();
+</script>
+</body>
+</html>
