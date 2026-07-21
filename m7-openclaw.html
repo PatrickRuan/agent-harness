@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M7 · 解剖一隻龍蝦：OpenClaw 怎麼運作</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="sitebar"><div class="inner">
+  <a class="home" href="index.html">🏠 課程地圖</a>
+  <a href="m1-context-window.html">M1 箱子</a>
+  <a href="m2-four-eras.html">M2 四代工程學</a>
+  <a href="m3-agent-harness.html">M3 Agent</a>
+  <a href="m4-toolbox.html">M4 零件箱</a>
+  <a href="m5-products.html">M5 產品</a>
+  <a href="m6-safety.html">M6 安全</a>
+  <a href="m7-openclaw.html">M7 龍蝦</a>
+  <a href="how-made.html">製作說明</a>
+  <a href="course2/index.html">🌍 課程二</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">Module 7 · 壓軸實作案例</div>
+  <h1>解剖一隻龍蝦<br>OpenClaw 怎麼運作</h1>
+  <p>前面六課都在講抽象概念。這一課拿一個真實產品，把它從頭到尾拆開，你會發現裡面全是你已經學過的東西。</p>
+</div></header>
+
+<main><div class="wrap">
+
+  <h2 class="title"><span class="chnum">1</span>一句話，總結整門課</h2>
+  <p class="lede">如果你只記得這一課的一句話，就記這句。</p>
+
+  <div class="note" style="font-size:17px;text-align:center;padding:20px">
+    <b>「OpenClaw 沒有 AI。<br>它是一個調度流程與執行的程式。」</b>
+  </div>
+
+  <div class="card">
+    <p>這句話乍看很奇怪——OpenClaw 不是紅到爆的 AI 產品嗎？怎麼會「沒有 AI」？</p>
+    <p>但這正是 <a href="m3-agent-harness.html">M3</a> 講的那條界線。OpenClaw 裡面<b>沒有模型</b>：它不會推理、不會理解語言。你得自己接一個 LLM 給它（接 Claude、GPT、或你電腦裡跑的本地模型都行）。</p>
+    <p>那 OpenClaw 是什麼？<b>它就是 harness。</b>它負責調度流程、組裝脈絡、派發工具、實際執行動作。</p>
+    <div class="callout">
+      <b>所以那個公式在這裡完全成立：</b><br>
+      OpenClaw（harness）＋ 你接上的模型（model）＝ 一個能做事的 agent。<br>
+      把模型拔掉，OpenClaw 就是一具沒有大腦的身體；把 OpenClaw 拔掉，模型就是一顆關在密室裡的大腦。
+    </div>
+  </div>
+
+  <h2 class="title"><span class="chnum">2</span>它實際上怎麼跑一輪</h2>
+  <p class="lede">四個步驟。你會發現這就是 M3 那個迴圈，只是換了名字。</p>
+
+  <div class="demo">
+    <div class="lbl">互動 · 龍蝦跑一輪的完整流程</div>
+    <p class="hint">情境：你在 Telegram 上跟龍蝦說「幫我把設定檔備份一下」。按下一步看它怎麼做到。</p>
+    <div class="row">
+      <button class="btn" id="stepNext">下一步 ▸</button>
+      <button class="btn ghost" id="stepReset">重來</button>
+    </div>
+    <div class="steps" id="stepBox">
+      <div class="step act"><div class="who">1 · 使用者說出企圖</div>
+        <div class="txt">你在龍蝦的環境裡（Telegram、LINE、網頁、終端機都行）說：「幫我把設定檔備份一下」。</div></div>
+      <div class="step run"><div class="who">2 · 龍蝦取出「說明書」</div>
+        <div class="txt">龍蝦翻出它的系統提示、身分設定、記憶、規則——也就是下一節要拆的那本說明書。</div></div>
+      <div class="step think"><div class="who">3 · 一起送進 LLM</div>
+        <div class="txt">龍蝦把「你的企圖 ＋ 整本說明書」打包送進模型。<b>這一步就是在裝 M1 那個箱子。</b></div></div>
+      <div class="step obs"><div class="who">4 · 模型回傳指令，龍蝦執行</div>
+        <div class="txt">模型理解你要什麼，回傳一個具體指令：<code>cp openclaw.json openclaw.bak</code>。<b>龍蝦才是真正去執行它的那個。</b></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>注意第 4 步那個分工，這是整個 agent 世界最關鍵的一刀：</p>
+    <div class="split">
+      <div class="box model">
+        <h4><span class="dot m"></span>模型做的</h4>
+        <p style="font-size:14px;margin:.3em 0">看懂「備份設定檔」這句人話，<b>決定</b>該下哪個指令。它只是<b>吐出一串文字</b>。</p>
+      </div>
+      <div class="box harness">
+        <h4><span class="dot h"></span>龍蝦做的</h4>
+        <p style="font-size:14px;margin:.3em 0">把那串文字<b>真的拿去執行</b>，在你的電腦上動了一個檔案。</p>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:12px">模型全程沒有碰過你的電腦。碰你電腦的，從頭到尾都是龍蝦。這也是為什麼 <a href="m6-safety.html">M6</a> 的權限問題這麼重要——<b>危險的不是模型會亂想，是 harness 會照做。</b></p>
+  </div>
+
+  <h2 class="title"><span class="chnum">3</span>拆開那本「說明書」</h2>
+  <p class="lede">這是 OpenClaw 最值得學的設計，也是 M1「箱子」概念的真實版本。</p>
+
+  <div class="card">
+    <p>龍蝦的說明書不是一個檔案，而是好幾個各司其職的檔案，<b>每一輪對答都會被組裝起來、一起送進模型</b>：</p>
+    <div class="tablewrap">
+      <table class="cmp">
+        <thead><tr><th style="min-width:130px">檔案</th><th>放什麼</th></tr></thead>
+        <tbody>
+          <tr><td class="lab">System Prompt</td><td>最底層的行為規範：你是什麼、該怎麼做事、不准做什麼。</td></tr>
+          <tr><td class="lab">Identity.md</td><td>龍蝦自己的身分：叫什麼名字、什麼個性、講話什麼調調。</td></tr>
+          <tr><td class="lab">User.md</td><td><b>你</b>是誰：你的身分、偏好、該怎麼稱呼你（例如要它叫你「Boss」）。</td></tr>
+          <tr><td class="lab">Memory.md</td><td>它記下來的重要事情與你交代過的規則——<b>這就是它「記得」你的方式</b>。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <b>回想 M1：</b>模型<b>沒有記憶</b>。所以龍蝦「記得你」不是因為模型記得，而是因為
+      <b>龍蝦把 Memory.md 的內容，每一輪都重新塞進箱子一次</b>。
+      所謂的 AI 記憶，說穿了就是「一個檔案，加上每次都重讀一遍」。
+    </div>
+  </div>
+
+  <div class="demo">
+    <div class="lbl">互動 · 說明書組裝器：親手裝一次箱子</div>
+    <p class="hint">勾選要放進箱子的東西，看看模型這一輪到底「看到」什麼、佔掉多少空間。試著把 Memory.md 取消勾選，看它會變怎樣。</p>
+
+    <div class="row" id="asmToggles" style="gap:14px;margin-bottom:6px"></div>
+
+    <div class="split" style="margin-top:12px">
+      <div>
+        <div style="font-weight:800;font-size:13.5px;margin-bottom:4px">📦 這一輪送進模型的箱子</div>
+        <div class="ctxwin">
+          <div class="capbar"><span id="asmUsed">已用 0</span><span>示意上限 8,000 tokens</span></div>
+          <div class="ctxtrack" id="asmTrack"></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:800;font-size:13.5px;margin-bottom:4px">🦞 龍蝦這一輪的表現</div>
+        <div class="outbox" id="asmOut" style="font-size:14px"></div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="title"><span class="chnum">4</span>它長什麼樣子：架構</h2>
+  <p class="lede">為什麼你可以用 LINE、Telegram、網頁、終端機都跟同一隻龍蝦講話？</p>
+
+  <figure class="fig">
+    <svg viewBox="0 0 640 240" role="img" aria-label="OpenClaw 架構：多種介面經由 gateway 連到核心與模型">
+      <defs>
+        <marker id="oc-ar" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" fill="var(--muted)"/>
+        </marker>
+      </defs>
+
+      <text x="20" y="20" font-size="12" font-weight="800" fill="var(--muted)">你可以從這些地方講話</text>
+      <g font-size="11.5" text-anchor="middle">
+        <rect x="20" y="34" width="104" height="28" rx="7" fill="var(--brand-soft)" stroke="var(--brand)"/>
+        <text x="72" y="52" fill="var(--brand)">LINE / Telegram</text>
+        <rect x="20" y="72" width="104" height="28" rx="7" fill="var(--brand-soft)" stroke="var(--brand)"/>
+        <text x="72" y="90" fill="var(--brand)">網頁介面</text>
+        <rect x="20" y="110" width="104" height="28" rx="7" fill="var(--brand-soft)" stroke="var(--brand)"/>
+        <text x="72" y="128" fill="var(--brand)">終端機 CLI</text>
+      </g>
+      <g stroke="var(--muted)" stroke-width="1.5" marker-end="url(#oc-ar)">
+        <line x1="128" y1="48" x2="196" y2="78"/>
+        <line x1="128" y1="86" x2="196" y2="86"/>
+        <line x1="128" y1="124" x2="196" y2="94"/>
+      </g>
+
+      <rect x="200" y="52" width="96" height="70" rx="10" fill="var(--harness-soft)" stroke="var(--harness)" stroke-width="2"/>
+      <text x="248" y="80" font-size="13" font-weight="800" text-anchor="middle" fill="var(--harness)">Gateway</text>
+      <text x="248" y="98" font-size="10.5" text-anchor="middle" fill="var(--muted)">統一入口</text>
+      <text x="248" y="112" font-size="10" text-anchor="middle" fill="var(--muted)">（預設 :18789）</text>
+
+      <line x1="300" y1="87" x2="352" y2="87" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#oc-ar)"/>
+
+      <rect x="356" y="40" width="120" height="94" rx="10" fill="var(--card)" stroke="var(--harness)" stroke-width="2"/>
+      <text x="416" y="64" font-size="13" font-weight="800" text-anchor="middle" fill="var(--harness)">龍蝦核心</text>
+      <text x="416" y="82" font-size="10.5" text-anchor="middle" fill="var(--muted)">組裝說明書</text>
+      <text x="416" y="97" font-size="10.5" text-anchor="middle" fill="var(--muted)">派發工具</text>
+      <text x="416" y="112" font-size="10.5" text-anchor="middle" fill="var(--muted)">執行指令</text>
+      <text x="416" y="127" font-size="10" text-anchor="middle" fill="var(--warn)">← 這裡沒有 AI</text>
+
+      <line x1="480" y1="72" x2="530" y2="72" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#oc-ar)"/>
+      <rect x="534" y="52" width="92" height="42" rx="9" fill="var(--model-soft)" stroke="var(--model)" stroke-width="2"/>
+      <text x="580" y="70" font-size="12" font-weight="800" text-anchor="middle" fill="var(--model)">LLM</text>
+      <text x="580" y="85" font-size="9.5" text-anchor="middle" fill="var(--muted)">你自己接</text>
+
+      <line x1="480" y1="112" x2="530" y2="112" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#oc-ar)"/>
+      <rect x="534" y="98" width="92" height="38" rx="9" fill="var(--warn-soft)" stroke="var(--warn)"/>
+      <text x="580" y="115" font-size="11.5" font-weight="700" text-anchor="middle" fill="var(--warn)">你的電腦</text>
+      <text x="580" y="128" font-size="9.5" text-anchor="middle" fill="var(--muted)">檔案、指令</text>
+
+      <text x="320" y="175" font-size="12.5" text-anchor="middle" fill="var(--muted)">不管你從哪個介面講話，都匯進同一個 gateway，共用同一份記憶與說明書。</text>
+      <text x="320" y="196" font-size="12.5" text-anchor="middle" fill="var(--muted)">這就是為什麼你早上在手機交代的事，晚上用電腦問它還記得。</text>
+      <text x="320" y="220" font-size="11.5" text-anchor="middle" fill="var(--warn)">注意：連到「你的電腦」那條線，就是全部風險的來源。</text>
+    </svg>
+    <figcaption>多種介面 → 統一 gateway → 龍蝦核心 → 一邊接模型（借腦袋），一邊接你的電腦（動手）。連接埠為預設值，版本可能變動。</figcaption>
+  </figure>
+
+  <h2 class="title"><span class="chnum">5</span>為什麼它能「觸及更多世界」</h2>
+
+  <div class="card">
+    <p>用簡報裡的原話說：</p>
+    <p style="border-left:3px solid var(--brand);padding-left:14px;color:var(--brand)">
+      「當我們跟 AI 聊天時候的企圖，被說明書轉譯成龍蝦能夠執行的程式指令的時候，
+       又放在一個被授權、有工具的伺服器中，那就是一個<b>脫離 LLM 聊天的情境，可以觸及更多世界</b>。」
+    </p>
+    <p>拆成三個要素，每一個你都學過：</p>
+    <ul>
+      <li><b>說明書</b>（脈絡組裝）→ <a href="m1-context-window.html">M1</a> 的箱子</li>
+      <li><b>工具與 skills</b>（能力）→ <a href="m4-toolbox.html">M4</a> 的零件箱</li>
+      <li><b>被授權的伺服器</b>（權限）→ <a href="m6-safety.html">M6</a> 的安全</li>
+    </ul>
+    <p class="muted">三者缺一，它就只是個聊天機器人。三者齊備，它就能真的改你的檔案、寄你的信、跑你的程式。<b>威力和風險，是同一件事的兩面。</b></p>
+  </div>
+
+  <h2 class="title"><span class="chnum">6</span>「龍蝦心態」：真的要玩之前</h2>
+
+  <div class="card">
+    <h3>1 · 資安警覺放第一</h3>
+    <p>這不是客套話。龍蝦跑在你自己的機器上、被授權能執行指令、還會去讀外部網頁和訊息——<b><a href="m6-safety.html">M6</a> 講的提示注入，在這裡是活生生的風險</b>。</p>
+    <p class="muted">第一次玩：用測試資料夾、不要放金鑰、先看清楚它每一步要做什麼，再逐步放權。</p>
+  </div>
+
+  <div class="card">
+    <h3>2 · 這只是第一個產品，可以等下一個</h3>
+    <p>OpenClaw 現在很紅，但這個領域三個月就換一輪。<b>不需要急著把身家押在任何一個工具上。</b>重要的是你懂了背後的結構——工具換了，結構不變。</p>
+  </div>
+
+  <div class="card">
+    <h3>3 · 拿到它能做什麼：認識 AI ⇒ 賦能 ⇒ 有用</h3>
+    <p>這是一條有順序的路，別跳步：</p>
+    <div class="tagrow">
+      <span class="tag">① 認識 AI（你正在做的事）</span>
+      <span class="tag h">② 賦能：找到自己的 use case</span>
+      <span class="tag h">③ 有用：解決自己的痛點，再解決別人的痛點</span>
+    </div>
+    <p class="muted">大部分人卡在第一步就想跳到第三步，結果做出一堆很酷但沒人要用的東西。</p>
+  </div>
+
+  <div class="card">
+    <h3>4 · 模型可以自己接，包括跑在你電腦裡的</h3>
+    <p>既然龍蝦「沒有 AI」，那腦袋就是你自己選的。除了接雲端 API，也可以用
+       <code class="inline">ollama</code>、<code class="inline">mlx</code>（Apple 晶片）或 Hugging Face 上的模型，<b>整個跑在自己電腦裡</b>——資料不出門，也不用付 API 費。</p>
+    <p>2026 年的開源模型已經相當能用，例如 <b>Qwen 3.5</b>（2026 年 3 月，有 4B／9B／27B 等尺寸）與
+       <b>Gemma 4</b>（2026 年 3 月 31 日，有 4B／26B／31B 等尺寸），兩者都是 Apache 2.0 授權、都能直接在 Ollama 上跑。</p>
+    <div class="callout">
+      <b>選型的白話原則：</b>數字（4B、27B）是參數量，越大越聰明也越吃記憶體。
+      筆電先從小尺寸試，跑得動再往上加。<b>這個領域每幾個月就換一批模型，上面的版本很快會過時——請以官方最新資訊為準。</b>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>5 · 面對 AI 時代的不焦慮</h3>
+    <p>你剛剛把一個爆紅的 AI 產品從頭到尾拆開了，發現裡面沒有魔法——只有「組裝脈絡、呼叫模型、執行指令」這幾件你已經看得懂的事。</p>
+    <p><b>看得懂，就不用怕。</b>這門課從頭到尾想給你的，就是這個。</p>
+    <p class="muted">至於 AI 對產業和就業會造成什麼衝擊、你該站在哪裡——那是<a href="course2/index.html">課程二</a>要談的。</p>
+  </div>
+
+  <div class="pagenav">
+    <a href="how-made.html">← 製作說明</a>
+    <a class="next" href="course2/index.html">課程二 · AI 瘋狂遊戲 →</a>
+  </div>
+
+</div></main>
+
+<footer>
+  AI Agent 白話課 · M7 解剖一隻龍蝦 · <a href="index.html">回課程地圖</a><br>
+  <span style="opacity:.75">內容依據使用者提供的簡報整理，並查證後補充。產品細節可能隨版本變動。</span>
+</footer>
+
+<script src="assets/app.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- 流程步進器 ---------- */
+  Lab.stepper({ steps:'#stepBox .step', next:'#stepNext', reset:'#stepReset' });
+
+  /* ---------- 說明書組裝器 ---------- */
+  var CAP = 8000;
+  var PARTS = [
+    { id:'sys',  label:'System Prompt', cls:'sys',  cost:1200, on:true,
+      desc:'行為規範與邊界' },
+    { id:'idn',  label:'Identity.md',   cls:'ai',   cost:400,  on:true,
+      desc:'龍蝦自己的身分與個性' },
+    { id:'usr',  label:'User.md',       cls:'user', cost:350,  on:true,
+      desc:'你是誰、怎麼稱呼你' },
+    { id:'mem',  label:'Memory.md',     cls:'sum',  cost:1800, on:true,
+      desc:'記住的事情與規則' },
+    { id:'tool', label:'工具定義',       cls:'file', cost:2200, on:true,
+      desc:'它能呼叫哪些工具' }
+  ];
+  var ASK = { label:'你這句話', cls:'user', cost:60 };
+
+  var togglesEl = document.getElementById('asmToggles');
+  var trackEl   = document.getElementById('asmTrack');
+  var usedEl    = document.getElementById('asmUsed');
+  var outEl     = document.getElementById('asmOut');
+
+  PARTS.forEach(function(p){
+    var lab = Lab.el('label');
+    lab.style.display = 'flex';
+    lab.style.alignItems = 'center';
+    lab.style.gap = '6px';
+    lab.style.fontSize = '13.5px';
+    lab.style.fontWeight = '700';
+    lab.style.cursor = 'pointer';
+
+    var cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = p.on;
+    cb.addEventListener('change', function(){ p.on = cb.checked; render(); });
+
+    lab.appendChild(cb);
+    lab.appendChild(Lab.el('span', null, p.label));
+    togglesEl.appendChild(lab);
+  });
+
+  function render(){
+    Lab.clear(trackEl);
+    var active = PARTS.filter(function(p){ return p.on; });
+    var used = active.reduce(function(s,p){ return s + p.cost; }, 0) + ASK.cost;
+
+    active.concat([ASK]).forEach(function(p){
+      var d = Lab.el('div', 'ctxseg ' + p.cls);
+      d.style.height = (p.cost / CAP * 100) + '%';
+      if (p.cost / CAP * 100 > 6) d.textContent = p.label;
+      d.title = p.label + '：' + p.cost.toLocaleString() + ' tokens';
+      trackEl.appendChild(d);
+    });
+
+    usedEl.textContent = '已用 ' + used.toLocaleString() +
+      '（' + Math.round(used / CAP * 100) + '%）';
+
+    /* 依勾選狀態，說明龍蝦這一輪會有什麼表現 */
+    Lab.clear(outEl);
+    var notes = [];
+    var by = {};
+    PARTS.forEach(function(p){ by[p.id] = p.on; });
+
+    if (!by.sys)  notes.push(['✗ 沒有行為規範', '它不知道自己該做什麼、不該做什麼，可能亂來或拒絕工作。', 'var(--danger)']);
+    if (!by.idn)  notes.push(['✗ 沒有身分設定', '它不知道自己是誰，講話會變成一般助理的口吻。', 'var(--warn)']);
+    if (!by.usr)  notes.push(['✗ 不知道你是誰', '不會用你設定的方式稱呼你，也不知道你的偏好。', 'var(--warn)']);
+    if (!by.mem)  notes.push(['✗ 失憶了', '你之前交代過的所有規則與它記下的事，這一輪它通通不知道——因為記憶只存在於這個檔案裡。', 'var(--danger)']);
+    if (!by.tool) notes.push(['✗ 沒有手腳', '它只能跟你聊天，沒辦法真的執行任何動作。退化成聊天機器人。', 'var(--danger)']);
+
+    if (notes.length === 0) {
+      var ok = Lab.el('p', null, '✓ 說明書完整。它知道自己是誰、你是誰、規則是什麼、能用哪些工具——這一輪它會正常運作。');
+      ok.style.color = 'var(--harness)';
+      ok.style.margin = '.2em 0';
+      outEl.appendChild(ok);
+    } else {
+      notes.forEach(function(n){
+        var p = document.createElement('p');
+        p.style.margin = '.35em 0';
+        var b = Lab.el('b', null, n[0] + '：');
+        b.style.color = n[2];
+        p.appendChild(b);
+        p.appendChild(Lab.el('span', null, n[1]));
+        outEl.appendChild(p);
+      });
+    }
+
+    var foot = Lab.el('p', 'muted',
+      '注意：光是說明書就吃掉 ' + Math.round((used - ASK.cost) / used * 100) +
+      '% 的內容，你那句話只佔 ' + ASK.cost + ' tokens。而且這整包，每一輪都要重寄一次。');
+    foot.style.fontSize = '12.5px';
+    foot.style.marginBottom = '0';
+    outEl.appendChild(foot);
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

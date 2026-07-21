@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C3 · 當 AI 從「會聊天」變成「會做事」</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav class="sitebar"><div class="inner">
+  <a class="home" href="index.html">🌍 課程二地圖</a>
+  <a href="c1-industry-map.html">C1 產業地圖</a>
+  <a href="c2-bottleneck.html">C2 瓶頸與瘋狂</a>
+  <a href="c3-impact.html">C3 衝擊</a>
+  <a href="c4-uhi.html">C4 UHI</a>
+  <a href="c5-your-place.html">C5 你的位置</a>
+  <a href="../index.html">← 課程一</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">Course 2 · Module 3</div>
+  <h1>當 AI 從「會聊天」<br>變成「會做事」</h1>
+  <p>這一步跨過去，衝擊的性質就完全不同了。這一課也會教你一件更重要的事：<b>怎麼檢查一個嚇人的預測</b>。</p>
+</div></header>
+
+<main><div class="wrap">
+
+  <h2 class="title"><span class="chnum">1</span>關鍵的那一步：Harness + LLM</h2>
+  <p class="lede">如果你上過課程一，這一段會很熟悉。沒上過也沒關係，三句話講完。</p>
+
+  <div class="card">
+    <p>LLM 本身只會產生文字。它不會上網、不會改檔案、不會寄信——<b>它是一顆關在密室裡的大腦</b>。</p>
+    <p>但軟體工程師在它外面包了一層程式（叫做 <b>harness</b>），幫它裝上手腳：能呼叫工具、能執行指令、能一圈一圈反覆做事直到完成。</p>
+    <div class="formula" style="display:flex;margin:16px 0">
+      <span class="pill model">LLM</span><span class="op">＋</span>
+      <span class="pill harness">Harness</span><span class="op">＝</span>
+      <span class="pill brand">會做事的 Agent</span>
+    </div>
+    <p class="muted">想搞懂這層程式到底怎麼運作，去看 <a href="../m3-agent-harness.html">課程一 M3</a>，那裡拆得很細。這裡你只要記得：<b>會聊天到會做事，中間隔的是這層程式，而它已經做出來了。</b></p>
+  </div>
+
+  <div class="card">
+    <h3>三個階段，衝擊完全不同</h3>
+    <div class="tablewrap">
+      <table class="cmp">
+        <thead><tr><th style="min-width:90px">階段</th><th>它能做什麼</th><th>對工作的影響</th></tr></thead>
+        <tbody>
+          <tr><td class="lab">聊天</td><td>回答問題、寫草稿</td><td>當助手，<b>幫你做得更快</b></td></tr>
+          <tr><td class="lab">推理</td><td>多步驟思考、解複雜問題</td><td>開始能處理<b>需要動腦的部分</b></td></tr>
+          <tr><td class="lab" style="color:var(--warn)">代理</td><td class="no">自己規劃、動手、驗證、修正，跑完整個任務</td><td class="no"><b>能接走整段流程</b>，而不只是其中一步</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>差別在於：前兩個階段，AI 是<b>工具</b>，你還在流程裡；第三個階段，AI 可以<b>整段接手</b>，你變成驗收的人。</p>
+    <p class="muted">簡報裡把這個叫「數位擎天柱」——一個不需要實體身體、直接在電腦裡工作的數位勞動力。它不用睡覺、可以複製一千份、而且每個月都在變強。</p>
+  </div>
+
+  <h2 class="title"><span class="chnum">2</span>那個 2028 年的預測</h2>
+  <p class="lede">網路上流傳一個推論，說 2028 年 6 月世界金融體系會撐不住。這一節我們<b>不討論它對不對</b>，而是練習怎麼檢查它。</p>
+
+  <div class="card">
+    <p><span class="ev ev-guess">推測</span> 這個推論的來源不明（沒有具名作者或機構），出現在 2025 年底。它的推理鏈是這樣的：</p>
+    <div style="text-align:center;font-weight:800;font-size:15px;color:var(--warn);margin:14px 0;line-height:2">
+      就業（SaaS 產業先倒）<br>⇩<br>品牌、電商、消費萎縮<br>⇩<br>金融體系承受不住
+    </div>
+    <p>邏輯大致是：AI agent 先取代 SaaS 軟體與其從業人員 → 大量白領失業 → 沒收入就不消費 → 品牌與電商崩壞 → 壞帳與違約堆積 → 金融體系出事。</p>
+  </div>
+
+  <div class="danger">
+    <b>先講最重要的事：這是一個匿名來源的推測，不是預測結果，更不是事實。</b>
+    我把它放進教材，<b>不是要你相信它</b>，也不是要你嘲笑它，
+    而是因為<b>你這輩子會遇到大量這種說法</b>——聽起來有邏輯、有具體日期、令人不安。
+    你需要的不是一個答案，而是一套<b>檢查的方法</b>。
+  </div>
+
+  <h2 class="title"><span class="chnum">3</span>練習：把推論鏈拆開檢查</h2>
+  <p class="lede">點開每一環，看看它<b>需要什麼成立</b>、以及<b>什麼證據會推翻它</b>。</p>
+
+  <div class="demo">
+    <div class="lbl">互動 · 推論鏈拆解器</div>
+    <p class="hint">一個推論鏈的強度，等於它<b>最弱的那一環</b>。點開每一環自己判斷。</p>
+    <div class="chain" id="chainBox"></div>
+    <div class="outbox" id="chainOut" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <h3>檢查完之後，你應該注意到幾件事</h3>
+    <ul>
+      <li><b>每一環都「有可能」，但每一環也都「不一定」。</b>而機率是相乘的——四個各有七成把握的環節串起來，整體只剩約 24%。</li>
+      <li><b>精確的日期是最可疑的部分。</b>沒有任何模型能算出「2028 年 6 月」。這個精確度<b>反而是警訊</b>：它讓推測聽起來像預測。</li>
+      <li><b>它完全忽略了反作用力。</b>政府會介入、央行會出手、企業會調整、人會轉行。真實系統充滿負回授，不會安靜地照著一條線走到底。</li>
+      <li><b>但它也不是全錯。</b>「AI 衝擊就業，而就業衝擊會沿著經濟往外傳」這個大方向是合理的，值得認真對待。</li>
+    </ul>
+    <div class="note">
+      <b>這才是這一節真正要教的：</b>面對一個嚇人的說法，不要只有「相信」和「不信」兩個選項。
+      第三個選項是——<b>把它拆開，看哪一環最弱，然後去追蹤那一環的證據</b>。
+      這件事你們電機系其實很熟：<b>這就是找系統裡最弱的那一級。</b>
+    </div>
+  </div>
+
+  <div class="opinion">
+    <div class="who">老師的觀點</div>
+    <p>我認為<b>方向值得認真看待，時間點不必當真</b>。</p>
+    <p>AI 對白領工作的衝擊是真的，而且已經開始。但「哪一年會發生什麼」——沒有人知道，
+       講得越精確的人，通常越該被懷疑。</p>
+    <p>對你們大一的年紀，我覺得比較實際的態度是：<b>別為了一個沒人能算準的日期焦慮，但要為「衝擊會發生」這件事做準備。</b>
+       準備的方式不是猜測時間，而是讓自己成為<b>看得懂這場變化、而且能用它做事的人</b>。這是最後一課的主題。</p>
+  </div>
+
+  <div class="pagenav">
+    <a href="c2-bottleneck.html">← C2 瓶頸與瘋狂</a>
+    <a class="next" href="c4-uhi.html">C4 · UHI →</a>
+  </div>
+
+</div></main>
+
+<footer>
+  AI 瘋狂遊戲 · C3 衝擊 · <a href="index.html">回課程二地圖</a>
+</footer>
+
+<script src="../assets/app.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var LINKS = [
+    {
+      title: 'AI agent 取代 SaaS 軟體與其從業人員',
+      need: '需要 agent 可靠到能取代整套企業軟體流程，而且企業願意換掉已經用了很多年、綁著資料與流程的系統。',
+      break: '如果 agent 的可靠度停滯、或企業因為稽核與法規要求不敢換掉既有系統，這一環就會慢很多。',
+      note: '目前 agent 確實在快速進步，但「能做出來」和「企業敢用在關鍵流程上」是兩件事，中間常常差好幾年。'
+    },
+    {
+      title: '大量白領同時失業',
+      need: '需要取代速度快到勞動市場來不及吸收，而且沒有同時長出新的職缺。',
+      break: '如果 AI 同時創造出新工作（如同過去每一次自動化浪潮），或取代是漸進的（自然離職不補人，而非大量解雇），衝擊會被稀釋。',
+      note: '歷史上技術革命通常「改變工作內容」多於「消滅工作總量」——但也確實有轉型期陣痛，且這次速度可能更快。'
+    },
+    {
+      title: '消費萎縮，品牌與電商崩壞',
+      need: '需要失業規模大到足以顯著壓低整體消費力，且沒有任何收入替代機制介入。',
+      break: '若政府推出失業補助、發放現金、或就是後面要講的 UHI，消費就不會直線下墜。',
+      note: '這一環其實預設了「政府完全不作為」。但現實中，消費一旦崩跌，政治壓力會立刻逼出政策反應。'
+    },
+    {
+      title: '金融體系承受不住',
+      need: '需要違約與壞帳同時集中爆發，且規模超過銀行資本與央行的處理能力。',
+      break: '央行降息、政府紓困、銀行提前緊縮放貸——2008 年之後建立的一整套監管與壓力測試機制，就是為了這種情境設計的。',
+      note: '這是整條鏈中最弱的一環：它必須假設所有防護機制同時失效。可能嗎？可能。但需要的假設非常多。'
+    }
+  ];
+
+  var box = document.getElementById('chainBox');
+  var out = document.getElementById('chainOut');
+  var opened = {};
+
+  LINKS.forEach(function(L, i){
+    if (i > 0) {
+      box.appendChild(Lab.el('div', 'chainarrow', '⇩'));
+    }
+
+    var wrap = Lab.el('div', 'link');
+
+    var btn = document.createElement('button');
+    btn.appendChild(Lab.el('span', 'step-n', String(i + 1)));
+    btn.appendChild(Lab.el('span', null, L.title));
+    btn.addEventListener('click', function(){
+      wrap.classList.toggle('open');
+      opened[i] = wrap.classList.contains('open');
+      updateSummary();
+    });
+
+    var det = Lab.el('div', 'detail');
+
+    det.appendChild(Lab.el('div', 'q', '這一環需要什麼成立？'));
+    det.appendChild(Lab.el('div', null, L.need));
+
+    det.appendChild(Lab.el('div', 'q', '什麼證據會推翻它？'));
+    det.appendChild(Lab.el('div', null, L.break));
+
+    var n = Lab.el('div', 'muted', L.note);
+    n.style.marginTop = '8px';
+    n.style.fontSize = '13.5px';
+    det.appendChild(n);
+
+    wrap.appendChild(btn);
+    wrap.appendChild(det);
+    box.appendChild(wrap);
+  });
+
+  function updateSummary(){
+    var count = Object.keys(opened).filter(function(k){ return opened[k]; }).length;
+    Lab.clear(out);
+
+    if (count === 0) {
+      out.appendChild(Lab.el('p', 'muted', '點開上面任何一環開始檢查。'));
+      return;
+    }
+
+    var p = document.createElement('p');
+    p.style.margin = '0';
+    p.appendChild(Lab.el('b', null, '已檢查 ' + count + ' / ' + LINKS.length + ' 環。'));
+    out.appendChild(p);
+
+    if (count === LINKS.length) {
+      var d = Lab.el('p', null,
+        '四環全部看過了。注意到了嗎——每一環單獨看都「有可能」，但每一環也都有明確的破口。' +
+        '而機率是相乘的：四個各有七成把握的環節串起來，整體只剩約 24%。');
+      d.style.color = 'var(--brand)';
+      d.style.margin = '.5em 0 0';
+      d.style.fontWeight = '700';
+      out.appendChild(d);
+    }
+  }
+
+  updateSummary();
+})();
+</script>
+</body>
+</html>

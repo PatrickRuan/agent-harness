@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C2 · 電不夠用，於是有人想去太空</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav class="sitebar"><div class="inner">
+  <a class="home" href="index.html">🌍 課程二地圖</a>
+  <a href="c1-industry-map.html">C1 產業地圖</a>
+  <a href="c2-bottleneck.html">C2 瓶頸與瘋狂</a>
+  <a href="c3-impact.html">C3 衝擊</a>
+  <a href="c4-uhi.html">C4 UHI</a>
+  <a href="c5-your-place.html">C5 你的位置</a>
+  <a href="../index.html">← 課程一</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">Course 2 · Module 2</div>
+  <h1>電不夠用<br>於是有人想去太空</h1>
+  <p>上一課挖到最底層是電力。這一課要說：那一層現在是整個產業最硬的天花板，而有人的解法瘋狂到你會以為在讀科幻小說。</p>
+</div></header>
+
+<main><div class="wrap">
+
+  <div class="evkey">
+    <span><b class="ev ev-fact">已證實</b> 有公開紀錄</span>
+    <span><b class="ev ev-filed">已申請</b> 送件了但沒實現</span>
+    <span><b class="ev ev-claim">某人宣稱</b> 有人這樣講</span>
+    <span><b class="ev ev-guess">推測</b> 可能完全錯</span>
+  </div>
+
+  <h2 class="title"><span class="chnum">1</span>瓶頸不是晶片，是電</h2>
+  <p class="lede">這是這幾年最重要的一個轉折：限制 AI 發展的東西換人了。</p>
+
+  <div class="card">
+    <p>前幾年大家搶的是<b>晶片</b>——買不到 GPU 就沒得玩。但現在情況變了：<b>就算你買得到晶片，也可能插不上電。</b></p>
+    <p><span class="ev ev-fact">已證實</span> 幾個能說明規模的數字：</p>
+    <ul>
+      <li>Gartner 預測：到 <b>2027 年，全球 40% 的 AI 資料中心會因電力不足而受限</b>。</li>
+      <li>美國每年需要新增約 <b>5,000 英里</b>的高壓輸電線才跟得上用電成長，但 2024 年實際只完成了 <b>888 英里</b>。</li>
+      <li>Morgan Stanley 估計：到 2028 年全球資料中心用電將增加 <b>126 GW</b>，光美國就短缺約 <b>49 GW</b>。</li>
+      <li>2026 年預計完工的資料中心專案，<b>將近一半</b>因為供電與電網問題而延宕。</li>
+    </ul>
+    <div class="callout">
+      <b>為什麼電網跟不上？</b>因為蓋一座資料中心大約一兩年，但<b>蓋一條高壓電網要五到十年</b>，還要經過土地、環評、地方協調。
+      軟體以月為單位迭代，電網以十年為單位。<b>這兩個時間尺度對不上，就是瓶頸的本質。</b>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>給電機系的話：</b>你們之後會修的電力系統、電力電子、電網穩定度、散熱——
+    這些課在十年前可能被視為「傳統科目」，
+    但現在<b>它們正好卡在全世界最貴的瓶頸上</b>。這不是勵志話，是產業結構的事實。
+  </div>
+
+  <h2 class="title"><span class="chnum">2</span>於是，有人開始想很極端的辦法</h2>
+  <p class="lede">當地面上的電不夠用，這些是檯面上真的在推的方向。請特別注意每一則的標籤。</p>
+
+  <div class="card">
+    <h3><span class="ev ev-claim">某人宣稱</span> 「中國在這件事上有優勢」</h3>
+    <p>Elon Musk 多次公開表示，中國在電力基礎建設的擴張速度上領先，因此在 AI 競賽中具有結構性優勢。</p>
+    <p class="muted">這是一個<b>有影響力的人的判斷</b>，不是中立的統計結論。它可能對，但也可能帶有他自己的立場與目的（例如推動美國放寬能源建設限制）。<b>聽這種話的正確方式是：問他為什麼要在這個時間點說這句話。</b></p>
+  </div>
+
+  <div class="card">
+    <h3><span class="ev ev-filed">已申請</span> 把資料中心搬到太空</h3>
+    <p>SpaceX 已向美國 FCC 提出申請，計畫部署一個<b>最多達一百萬顆衛星</b>的軌道資料中心星系。</p>
+    <p>已公開的設計細節：</p>
+    <ul>
+      <li>單顆衛星翼展約 <b>70 公尺</b>、展開高度約 20 公尺</li>
+      <li>由 <b>150 kW 太陽能板</b>供電，搭配可展開的液冷散熱系統</li>
+      <li>衛星之間用<b>雷射光學鏈路</b>互連，並接上既有的 Starlink 網路</li>
+      <li>運行高度約在 500～2,000 公里之間</li>
+    </ul>
+    <p><b>為什麼要去太空？</b>因為那裡有兩樣地球上很貴的東西：<b>不受日夜與天氣影響的太陽能</b>，以及<b>不用跟居民搶的散熱與土地</b>。而且完全不必接地面電網。</p>
+    <p><span class="ev ev-claim">某人宣稱</span> Musk 表示，在太空產生 AI 算力的成本，<b>兩三年內</b>就會比地面資料中心便宜。</p>
+    <div class="callout">
+      <b>請注意標籤的差別：</b>「向 FCC 送件申請」是<b>已證實發生的事</b>——文件確實存在。
+      但「一百萬顆衛星會被造出來並運作」<b>完全還沒發生</b>，
+      而「兩三年內會比地面便宜」<b>是他個人的預測</b>。
+      這三件事的可信度完全不同，新聞標題卻常常把它們寫成同一件事。
+    </div>
+  </div>
+
+  <h2 class="title"><span class="chnum">3</span>這場遊戲有多大？建立一點數字感</h2>
+  <p class="lede">「兆美元」這個詞被講到爛掉，但很少人真的有感覺。</p>
+
+  <div class="demo">
+    <div class="lbl">互動 · 兆美元到底是多少</div>
+    <p class="hint">選一個金額，換算成你比較有感覺的東西。</p>
+    <div class="toggle" id="scaleToggle">
+      <button data-c="m" class="active">100 萬</button>
+      <button data-c="b">10 億</button>
+      <button data-c="h">1,000 億</button>
+      <button data-c="t">1 兆</button>
+    </div>
+    <div class="outbox" id="scaleOut"></div>
+  </div>
+
+  <div class="card">
+    <p>抓到那個尺度感之後再回頭看：目前全球投入 AI 基礎建設（資料中心、晶片、電力）的資本支出，<b>已經在數兆美元的量級</b>。</p>
+    <p class="muted">這種規模的投資有一個重要性質：<b>它一旦下去就很難回頭</b>。蓋到一半的晶圓廠、電廠、資料中心不會因為風向變了就停工。這代表——不管你對 AI 樂觀還悲觀——<b>接下來好幾年，這些東西都會繼續蓋下去</b>。</p>
+  </div>
+
+  <div class="opinion">
+    <div class="who">老師的觀點</div>
+    <p>我想講的不是「所以快去買相關股票」——<b>我不會給任何投資建議，你們也不該從一份教材裡找投資建議。</b></p>
+    <p>我真正想說的是：這是一場規模罕見、而且台灣剛好位在正中央的產業變動。
+       <b>與其焦慮地旁觀，不如去搞懂它的結構。</b></p>
+    <p>看懂結構的人，未來會有比較多的選擇——可能是研究方向、可能是職涯、也可能只是在別人恐慌的時候比較不慌。<b>這比猜哪支股票會漲有用得多，也踏實得多。</b></p>
+  </div>
+
+  <div class="pagenav">
+    <a href="c1-industry-map.html">← C1 產業地圖</a>
+    <a class="next" href="c3-impact.html">C3 · 衝擊 →</a>
+  </div>
+
+</div></main>
+
+<footer>
+  AI 瘋狂遊戲 · C2 瓶頸與瘋狂 · <a href="index.html">回課程二地圖</a>
+</footer>
+
+<script src="../assets/app.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var SCALE = {
+    m: { name:'100 萬美元（10⁶）',
+         lines:[
+           '約等於台北一間普通公寓。',
+           '如果你每天花 1 萬元，要花 <b>約 3 個月</b>才花得完。',
+           '一般人一輩子有機會接觸到的數量級。'
+         ]},
+    b: { name:'10 億美元（10⁹）',
+         lines:[
+           '約等於 1,000 間那樣的公寓。',
+           '如果你每天花 1 萬元，要花 <b>約 8,200 年</b>——從人類文明開始花到現在還沒花完。',
+           '大型企業一整年的獲利等級。'
+         ]},
+    h: { name:'1,000 億美元（10¹¹）',
+         lines:[
+           '每天花 1 萬元要花 <b>約 82 萬年</b>。',
+           '接近部分國家一整年的 GDP。',
+           '單一科技巨頭一年在 AI 基礎建設上的資本支出，已經接近這個量級。'
+         ]},
+    t: { name:'1 兆美元（10¹²）',
+         lines:[
+           '每天花 1 萬元要花 <b>約 820 萬年</b>——比人類這個物種存在的時間還長。',
+           '相當於數個中型國家一整年的經濟總量。',
+           '而全球 AI 基礎建設的投入，<b>是這個數字的好幾倍</b>。'
+         ]}
+  };
+
+  var out = document.getElementById('scaleOut');
+
+  function render(key){
+    var d = SCALE[key];
+    Lab.clear(out);
+
+    var h = Lab.el('p', null, d.name);
+    h.style.fontWeight = '800';
+    h.style.color = 'var(--brand)';
+    h.style.margin = '.1em 0 .5em';
+    out.appendChild(h);
+
+    d.lines.forEach(function(t){
+      var p = document.createElement('p');
+      p.style.margin = '.3em 0';
+      p.style.fontSize = '14px';
+      // 以粗體標示關鍵數字：拆成純文字節點與 <b>，不使用 innerHTML
+      var parts = t.split(/<b>|<\/b>/);
+      parts.forEach(function(seg, idx){
+        if (!seg) return;
+        p.appendChild(idx % 2 === 1 ? Lab.el('b', null, seg) : document.createTextNode(seg));
+      });
+      out.appendChild(p);
+    });
+  }
+
+  Lab.toggler('#scaleToggle', render);
+})();
+</script>
+</body>
+</html>

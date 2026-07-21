@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C1 · 你聊天的那句話，背後有多少產業</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav class="sitebar"><div class="inner">
+  <a class="home" href="index.html">🌍 課程二地圖</a>
+  <a href="c1-industry-map.html">C1 產業地圖</a>
+  <a href="c2-bottleneck.html">C2 瓶頸與瘋狂</a>
+  <a href="c3-impact.html">C3 衝擊</a>
+  <a href="c4-uhi.html">C4 UHI</a>
+  <a href="c5-your-place.html">C5 你的位置</a>
+  <a href="../index.html">← 課程一</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">Course 2 · Module 1</div>
+  <h1>你聊天的那句話<br>背後有多少產業</h1>
+  <p>從你打的一行字開始，一層一層往下挖。挖到最後你會發現，台灣就站在這條鏈的正中央。</p>
+</div></header>
+
+<main><div class="wrap">
+
+  <h2 class="title"><span class="chnum">1</span>一層一層打開</h2>
+  <p class="lede">按「往下挖一層」，看你那句話到底驚動了多少產業。</p>
+
+  <div class="demo">
+    <div class="lbl">互動 · 產業地圖堆疊器</div>
+    <p class="hint">情境：你跟 ChatGPT 說了一句「幫我想個週末計畫」。然後呢？</p>
+    <div class="row">
+      <button class="btn" id="digBtn">往下挖一層 ↓</button>
+      <button class="btn ghost" id="digReset">重來</button>
+    </div>
+
+    <div class="stack" id="stackBox">
+      <div class="layer l0" data-i="0">
+        <div class="lname">① 你 ↔ LLM 聊天</div>
+        <div class="ldesc">ChatGPT、Gemini、Claude… 你打字，它回你。看起來就這樣而已。</div>
+      </div>
+      <div class="layer l1" data-i="1">
+        <div class="lname">② 模型供應商的資料中心</div>
+        <div class="ldesc">OpenAI、Google、Anthropic 的伺服器機房。你那句話其實跑到別人的機器上算完再傳回來。</div>
+      </div>
+      <div class="layer l2" data-i="2">
+        <div class="lname">③ 同一批機器，還在做另一件事：訓練</div>
+        <div class="ldesc">處理資料、訓練模型。這件事比回答你貴上千萬倍，而且要跑好幾個月。</div>
+      </div>
+      <div class="layer l3" data-i="3">
+        <div class="lname">④ 晶片與伺服器：台灣在這裡</div>
+        <div class="ldesc">NVIDIA 設計晶片 → 台積電製造 → 鴻海、廣達等組裝成伺服器與整櫃資料中心。</div>
+      </div>
+      <div class="layer l4" data-i="4">
+        <div class="lname">⑤ 讓這一切能開機的東西</div>
+        <div class="ldesc">電力、散熱、綠能、環保處理。沒有電，上面四層全部是廢鐵。</div>
+      </div>
+    </div>
+
+    <div class="outbox" id="digOut" style="margin-top:12px"></div>
+  </div>
+
+  <h2 class="title"><span class="chnum">2</span>先分清楚：訓練 vs 推論</h2>
+  <p class="lede">這是理解整個產業的第一個關鍵區分，很多新聞看不懂就是卡在這裡。</p>
+
+  <div class="split">
+    <div class="box model">
+      <h4><span class="dot m"></span>訓練（Training）</h4>
+      <p class="muted" style="font-size:14px;margin:.2em 0">把模型「教出來」的過程。</p>
+      <ul>
+        <li>吃進海量資料，反覆調整幾千億個參數</li>
+        <li>一次要跑<b>數週到數月</b></li>
+        <li>單次成本可達<b>數千萬到數億美元</b></li>
+        <li>做完就結束，不用天天做</li>
+      </ul>
+    </div>
+    <div class="box harness">
+      <h4><span class="dot h"></span>推論（Inference）</h4>
+      <p class="muted" style="font-size:14px;margin:.2em 0">你每次用它的那一下。</p>
+      <ul>
+        <li>模型已經訓練好，只是「跑一次」給你答案</li>
+        <li>單次<b>幾秒鐘</b>、成本極低</li>
+        <li>但<b>全世界每天幾十億次</b></li>
+        <li>只要有人在用，就永遠停不下來</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>用讀書來比喻：<b>訓練</b>是花四年念完一個學位；<b>推論</b>是有人問你一個問題、你答一句。</p>
+    <p>唸學位很貴很久，但只做一次；回答問題很便宜，但你這輩子要答幾百萬次。<b>兩者加起來，才是整個 AI 的用電與成本。</b></p>
+    <div class="callout">
+      <b>為什麼這個區分重要？</b>因為早期大家以為 AI 的成本主要在訓練，
+      但隨著全世界的人天天在用，<b>推論的總量已經變成更大的長期負擔</b>——
+      而且它不會結束，只會隨著使用者增加而一直長。這正是下一課「電力不夠用」的根源。
+    </div>
+  </div>
+
+  <h2 class="title"><span class="chnum">3</span>台灣在哪裡</h2>
+
+  <div class="card">
+    <p>把第 ④ 層放大看，這是跟你們最直接相關的一層：</p>
+    <div class="tablewrap">
+      <table class="cmp">
+        <thead><tr><th style="min-width:110px">角色</th><th>做什麼</th><th>代表公司</th></tr></thead>
+        <tbody>
+          <tr><td class="lab">晶片設計</td><td>設計 AI 運算用的 GPU 架構</td><td>NVIDIA、AMD、以及各家自研晶片</td></tr>
+          <tr><td class="lab">晶圓製造</td><td>把設計真的做成晶片</td><td class="yes"><b>台積電</b></td></tr>
+          <tr><td class="lab">伺服器組裝</td><td>把晶片組成伺服器、整櫃、整座資料中心</td><td class="yes"><b>鴻海、廣達</b>等台灣系統廠</td></tr>
+          <tr><td class="lab">基礎建設</td><td>供電、散熱、機房營運</td><td>電力公司、能源業、環保產業</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><span class="ev ev-fact">已證實</span> 台灣同時掌握了<b>最先進製程的晶圓製造</b>與<b>伺服器系統組裝</b>兩個環節。這不是新聞標題的誇飾，是這條供應鏈的實際結構。</p>
+  </div>
+
+  <div class="opinion">
+    <div class="who">老師的觀點</div>
+    <p>你們是<b>電機系</b>的學生，而這條鏈上跟台灣有關的每一環——晶片、電源、散熱、系統整合、電力工程——<b>幾乎都是電機系的守備範圍</b>。</p>
+    <p>我想講的不是「所以你們前途無量」這種空話。我想講的是：<b>你們比多數人更有機會看懂這場遊戲的內部構造</b>，而不是只能從新聞標題和股價去猜。這是一種很實在的優勢，值得好好用。</p>
+  </div>
+
+  <h2 class="title"><span class="chnum">4</span>把整張圖收起來</h2>
+
+  <figure class="fig">
+    <svg viewBox="0 0 620 300" role="img" aria-label="AI 產業由上到下的五層結構圖">
+      <g font-size="12" text-anchor="middle">
+        <rect x="150" y="14" width="320" height="40" rx="9" fill="var(--brand-soft)" stroke="var(--brand)" stroke-width="2"/>
+        <text x="310" y="32" font-size="13" font-weight="800" fill="var(--brand)">① 你 ↔ LLM 聊天</text>
+        <text x="310" y="47" font-size="10.5" fill="var(--muted)">ChatGPT、Gemini、Claude</text>
+
+        <rect x="120" y="66" width="380" height="44" rx="9" fill="var(--model-soft)" stroke="var(--model)" stroke-width="2"/>
+        <text x="310" y="84" font-size="13" font-weight="800" fill="var(--model)">② 模型供應商的資料中心</text>
+        <text x="310" y="100" font-size="10.5" fill="var(--muted)">推論（你每次用）＋ 訓練（把模型教出來）</text>
+
+        <rect x="90" y="122" width="440" height="44" rx="9" fill="var(--harness-soft)" stroke="var(--harness)" stroke-width="2"/>
+        <text x="310" y="140" font-size="13" font-weight="800" fill="var(--harness)">③ 晶片與伺服器硬體</text>
+        <text x="310" y="156" font-size="10.5" fill="var(--muted)">NVIDIA 設計 → 台積電製造 → 鴻海／廣達組裝</text>
+
+        <rect x="60" y="178" width="500" height="44" rx="9" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="2"/>
+        <text x="310" y="196" font-size="13" font-weight="800" fill="var(--warn)">④ 電力、散熱、綠能、環保</text>
+        <text x="310" y="212" font-size="10.5" fill="var(--muted)">整條鏈真正的天花板（下一課主題）</text>
+
+        <rect x="30" y="234" width="560" height="40" rx="9" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="310" y="252" font-size="12.5" font-weight="700" fill="var(--muted)">⑤ 資本：數兆美元等級的基礎建設投資</text>
+        <text x="310" y="267" font-size="10.5" fill="var(--muted)">越往下，投入越重、越難改變、也越決定上面能長多大</text>
+      </g>
+    </svg>
+    <figcaption>越上層越輕、越好換；越下層越重、越慢，也越是真正的限制。</figcaption>
+  </figure>
+
+  <div class="note">
+    <b>這一課的重點：</b>你打的那一行字，是一座金字塔的頂端。
+    下面壓著晶片廠、伺服器廠、電網、和數兆美元的資本。
+    <b>而金字塔越往下，就越難靠寫程式解決。</b>下一課就從最硬的那一層開始講。
+  </div>
+
+  <div class="pagenav">
+    <a href="index.html">← 課程二地圖</a>
+    <a class="next" href="c2-bottleneck.html">C2 · 瓶頸與瘋狂 →</a>
+  </div>
+
+</div></main>
+
+<footer>
+  AI 瘋狂遊戲 · C1 產業地圖 · <a href="index.html">回課程二地圖</a>
+</footer>
+
+<script src="../assets/app.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var layers = Array.prototype.slice.call(document.querySelectorAll('#stackBox .layer'));
+  var btn = document.getElementById('digBtn');
+  var out = document.getElementById('digOut');
+
+  var NOTES = [
+    '這是你看得到的全部。但它只是最上面那一層。',
+    '你的字被送到別人的機房算完再傳回來。你的手機只是負責顯示。',
+    '同一批昂貴的機器，白天回答你，同時也在訓練下一代模型。訓練一次要跑數週、燒掉數千萬美元。',
+    '這些機器不會憑空出現：NVIDIA 設計、台積電製造、鴻海與廣達組裝。' +
+    '這一層，台灣是主角。',
+    '而以上全部，都得插電。電力、散熱、綠能——這才是整條鏈真正的天花板，也是下一課的主題。'
+  ];
+
+  var i = 0;
+
+  function render(){
+    layers.forEach(function(l, k){ l.classList.toggle('on', k < i); });
+    Lab.clear(out);
+
+    if (i === 0) {
+      out.appendChild(Lab.el('p', 'muted', '按上面的按鈕開始往下挖。'));
+    } else {
+      var p = document.createElement('p');
+      p.style.margin = '0';
+      p.appendChild(Lab.el('b', null, '第 ' + i + ' 層：'));
+      p.appendChild(Lab.el('span', null, NOTES[i - 1]));
+      out.appendChild(p);
+    }
+
+    btn.disabled = i >= layers.length;
+    btn.textContent = i >= layers.length ? '挖到底了 ✓' : '往下挖一層 ↓';
+
+    if (i >= layers.length) {
+      var done = Lab.el('p', null,
+        '五層全部打開了。你那句「幫我想個週末計畫」，驚動了從軟體、資料中心、' +
+        '半導體、系統組裝一路到電網的整條產業鏈。');
+      done.style.color = 'var(--brand)';
+      done.style.fontWeight = '700';
+      done.style.margin = '.6em 0 0';
+      out.appendChild(done);
+    }
+  }
+
+  btn.addEventListener('click', function(){
+    if (i < layers.length) { i++; render(); }
+  });
+  document.getElementById('digReset').addEventListener('click', function(){ i = 0; render(); });
+
+  render();
+})();
+</script>
+</body>
+</html>
